@@ -6,16 +6,33 @@ from transformers.optimization import get_scheduler
 import sys
 import argparse
 
+
+torch.manual_seed(42)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model_dir = "gpt2-babi"
+
+def create_test_args() -> list:
+    return [
+        "trainer.py",
+        "gpt2",
+        "-task_number", "2",
+        "-lr", "3e-4",
+        "-epoch", "10",
+        "-batch_size", "8",
+    ]
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("model_name_or_id")
-parser.add_argument('-lr',default=3e-4,type=float)
-parser.add_argument('-batch_size',default=6,type=int)
-parser.add_argument('-epoch',default=3,type=int)
-parser.add_argument('-ga','--gradient_accumulation',default=1,type=int)
-args = parser.parse_args()
+parser.add_argument("-task_number", default=2, type=int)
+parser.add_argument('-lr', default=3e-4, type=float)
+parser.add_argument('-batch_size', default=6, type=int)
+parser.add_argument('-epoch', default=3, type=int)
+parser.add_argument('-ga', '--gradient_accumulation', default=1, type=int)
+
 
 class Trainer(DefaultTrainer):
-    def create_scheduler(self, num_training_steps: int, optimizer: torch.optim.Optimizer = None):
+    def create_scheduler(self,  num_training_steps: int, optimizer: torch.optim.Optimizer = None):
         """
         disable scheduler
         """
@@ -28,43 +45,64 @@ class Trainer(DefaultTrainer):
             )
         return self.lr_scheduler
 
-tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_id)
-model = AutoModelForCausalLM.from_pretrained(args.model_name_or_id)
 
-train_dataset = ConcatDataset(
-    [
-        BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id+1}")
-        for task_id in range(20)
-    ]
-)
-test_dataset = ConcatDataset(
-    [
-        BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id+1}")
-        for task_id in range(20)
-    ]
-)
+def make_dataset(tasks_amount=0):
+    if tasks_amount == 0:
+        tasks_amount = 20
+        train_ds = ConcatDataset(
+            [
+                BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id+1}")
+                for task_id in range(tasks_amount)
+            ]
+        )
+        test_ds = ConcatDataset(
+            [
+                BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id+1}")
+                for task_id in range(tasks_amount)
+            ]
+        )
+    else:
+        train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{tasks_amount}") ])
+        test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{tasks_amount}") ])
+    return train_ds, test_ds
 
-training_args = TrainingArguments(
-    output_dir="my_model",
-    save_strategy="epoch",
-    evaluation_strategy="epoch",
-    learning_rate=args.lr,
-    num_train_epochs=args.epoch,
-    weight_decay=0.0,
-    push_to_hub=False,
-    load_best_model_at_end=True,
-    per_gpu_train_batch_size=args.batch_size,
-    gradient_accumulation_steps=args.gradient_accumulation
-)
 
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=test_dataset,
-    data_collator=lambda x: collate_data(x, padding_value=tokenizer.eos_token_id,label_padding_value=tokenizer.eos_token_id),
-)
+if __name__ == "__main__":
+    sys.argv = create_test_args()
+    args = parser.parse_args()
 
-trainer.train()
-trainer.save_model("my_model/best")
-tokenizer.save_pretrained("my_model/best")
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_id)
+    model = AutoModelForCausalLM.from_pretrained(args.model_name_or_id)
+    model.to(device)
+
+    train_dataset, test_dataset = make_dataset(args.task_number)
+
+    training_args = TrainingArguments(
+        output_dir=model_dir,
+        save_strategy="no",
+        eval_strategy="no",
+        learning_rate=args.lr,
+        num_train_epochs=args.epoch,
+        weight_decay=0.0,
+        push_to_hub=False,
+        load_best_model_at_end=False,
+        per_device_train_batch_size=args.batch_size,
+        gradient_accumulation_steps=args.gradient_accumulation,
+        lr_scheduler_type="constant",
+    )
+
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=test_dataset,
+        data_collator=lambda x: collate_data(
+            x,
+            padding_value=tokenizer.eos_token_id,
+            label_padding_value=tokenizer.eos_token_id
+        ),
+    )
+
+    trainer.train()
+    trainer.save_model(model_dir)
+    tokenizer.save_pretrained(model_dir)

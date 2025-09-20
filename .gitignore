@@ -4,3 +4,6 @@ __py*
 my_model/*
 eval_result/
 ds_config.json
+
+gpt2-babi/*
+eval-results/*

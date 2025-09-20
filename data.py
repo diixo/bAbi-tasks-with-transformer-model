@@ -2,7 +2,7 @@ from datasets import load_dataset
 from transformers import PreTrainedTokenizer
 from torch.nn.utils.rnn import pad_sequence
 from collections import defaultdict
-# tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
+
 
 INPUT_TEMPLATE = """
 Context:
@@ -19,8 +19,8 @@ def get_next_qa(dataset):
     for x in dataset:
         story = x.get('story', None)
         if story:
-            sentences = story.get("text", None)
-            sent_types = story.get("type",[])
+            sentences = story.get("text",  None)
+            sent_types = story.get("type", [])
             
             context = ""
             for s_idx, sent in enumerate(sentences):
@@ -34,13 +34,15 @@ def get_next_qa(dataset):
 
 
 class BabiqaDataset():
-    def __init__(self,tokenizer,task_no="qa1",split="train",no_answer=False,retrun_object=False) -> None:
+
+    def __init__(self,tokenizer, task_no="qa1", split="train", no_answer=False, retrun_object=False) -> None:
         self.tokenizer:PreTrainedTokenizer = tokenizer
         dataset = load_dataset('babi_qa', type='en', task_no=task_no)[split]
         self.data = list(get_next_qa(dataset))
         self.no_answer = no_answer
         self.retrun_object = retrun_object
-    
+
+
     def __getitem__(self,index):
         context, question, answer = self.data[index]
         cqa = {
@@ -48,17 +50,15 @@ class BabiqaDataset():
             "question":question,
             "answer":answer
         }
-        
-        
-        if self.retrun_object:
-            return cqa
 
         if self.no_answer:
             cqa["answer"] = ""
-        
-        
+
+        if self.retrun_object:
+            return cqa
+
         input_text = INPUT_TEMPLATE.format_map(cqa).strip()
-        encodings = self.tokenizer(input_text,truncation=True,max_length=384,return_tensors="pt")
+        encodings = self.tokenizer(input_text, truncation=True, max_length=384, return_tensors="pt")
         encodings["labels"] = encodings["input_ids"].clone()
         return {
             "input_ids":encodings["input_ids"],
