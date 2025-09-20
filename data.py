@@ -69,7 +69,7 @@ class BabiqaDataset():
         return len(self.data)
 
 
-def collate_data(batch,padding_value,label_padding_value=-100):
+def collate_data(batch, padding_value, label_padding_value=-100):
     new_batch = defaultdict(lambda:[])
     for x in batch:
         for x_key in x.keys():
@@ -78,9 +78,9 @@ def collate_data(batch,padding_value,label_padding_value=-100):
     new_batch = dict(new_batch)
     for batch_key in new_batch.keys():
         if batch_key == "labels":
-            new_batch[batch_key] = pad_sequence(new_batch[batch_key],batch_first=True,padding_value=label_padding_value)
+            new_batch[batch_key] = pad_sequence(new_batch[batch_key], batch_first=True, padding_value=label_padding_value)
         else:
-            new_batch[batch_key] = pad_sequence(new_batch[batch_key],batch_first=True,padding_value=padding_value)
+            new_batch[batch_key] = pad_sequence(new_batch[batch_key], batch_first=True, padding_value=padding_value)
     
     return new_batch
 
