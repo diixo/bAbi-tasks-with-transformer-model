@@ -2,6 +2,19 @@
 Fine tune and evaluate transformer model on facebook's bAbi tasks.
 > [Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks](https://arxiv.org/abs/1502.05698)
 
+
+## Requirements:
+
+```bash
+pip install torch==2.5.1+cu118
+pip install pandas==2.3.1
+pip install datasets==3.6.0
+pip install transformers==4.56.1
+pip install scikit-learn==1.6.1
+pip install evaluate==0.4.6
+```
+
+
 ## Tasks
 |task_no|task_name|
 |----|------------|
