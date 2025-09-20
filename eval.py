@@ -11,7 +11,7 @@ model = AutoModelForCausalLM.from_pretrained(sys.argv[-1], device_map="auto")
 
 for task_id in range(20):
     task_no = f"qa{task_id+1}"
-    test_dataset = BabiqaDataset(tokenizer, split="test", task_no=task_no)
+    test_dataset = BabiqaDataset(tokenizer, split="test", task_no=task_no, no_answer=True)
     test_dataset_raw = BabiqaDataset(
         tokenizer, split="test", retrun_object=True, task_no=task_no
     )
