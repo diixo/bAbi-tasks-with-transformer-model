@@ -17,13 +17,13 @@ def create_test_args() -> list:
         "gpt2",
         "-task_number", "2",
         "-lr", "3e-4",
-        "-epoch", "10",
+        "-epoch", "30",
         "-batch_size", "8",
     ]
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("model_name_or_id")
+parser.add_argument("model_name")
 parser.add_argument("-task_number", default=2, type=int)
 parser.add_argument('-lr', default=3e-4, type=float)
 parser.add_argument('-batch_size', default=6, type=int)
@@ -71,8 +71,8 @@ if __name__ == "__main__":
     sys.argv = create_test_args()
     args = parser.parse_args()
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_id)
-    model = AutoModelForCausalLM.from_pretrained(args.model_name_or_id)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    model = AutoModelForCausalLM.from_pretrained(args.model_name)
     model.to(device)
 
     train_dataset, test_dataset = make_dataset(args.task_number)
