@@ -41,10 +41,18 @@ class BabiqaDataset():
         dataset = load_dataset('babi_qa', type='en', task_no=task_no)[split]
         self.data = list(get_next_qa(dataset))
         self.no_answer = no_answer
-        self.return_object = return_object
 
 
-    def __getitem__(self,index):
+    def get_raw_item(self, index):
+        context, question, answer = self.data[index]
+        return {
+            "context": context,
+            "question": question,
+            "answer": answer
+        }
+
+
+    def __getitem__(self, index):
         context, question, answer = self.data[index]
         cqa = {
             "context": context,
@@ -54,9 +62,6 @@ class BabiqaDataset():
 
         if self.no_answer:
             cqa["answer"] = ""
-
-        if self.return_object:
-            return cqa
 
         input_text = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
         enc_input = self.tokenizer(input_text, truncation=True, add_special_tokens=False, return_tensors="pt")["input_ids"]
