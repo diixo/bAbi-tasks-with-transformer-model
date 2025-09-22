@@ -1,4 +1,5 @@
 # bAbi-tasks-with-transformer-model
+
 Fine tune and evaluate transformer model on facebook's bAbi tasks.
 > [Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks](https://arxiv.org/abs/1502.05698)
 
@@ -39,7 +40,3 @@ pip install evaluate==0.4.6
 |qa19| path-finding|
 |qa20| agents-motivations|
 
-## Avaliable Models
-- [gpt2-babi](https://huggingface.co/p208p2002/gpt2-babi)
-- [gpt2-medium-babi](https://huggingface.co/p208p2002/gpt2-medium-babi)
-- [gpt2-large-babi](https://huggingface.co/p208p2002/gpt2-large-babi)
