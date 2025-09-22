@@ -21,7 +21,7 @@ model.to(device)
 if __name__ == "__main__":
 #for task_id in range(1):
     #task_no = f"qa{task_id+1}"
-    task_no = "qa2"
+    task_no = "qa1"
     test_dataset = BabiqaDataset(tokenizer, split="test", task_no=task_no, no_answer=True)
     test_dataset_raw = BabiqaDataset(
         tokenizer, split="test", retrun_object=True, task_no=task_no

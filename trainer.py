@@ -15,9 +15,9 @@ def create_test_args() -> list:
     return [
         "trainer.py",
         "gpt2",
-        "-task_number", "2",
-        "-lr", "3e-4",
-        "-epoch", "30",
+        "-task_number", "1",
+        "-lr", "2e-4",
+        "-epoch", "20",
         "-batch_size", "8",
     ]
 

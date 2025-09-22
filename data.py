@@ -2,6 +2,7 @@ from datasets import load_dataset
 from transformers import PreTrainedTokenizer
 from torch.nn.utils.rnn import pad_sequence
 from collections import defaultdict
+import torch
 
 
 INPUT_TEMPLATE = """
@@ -12,8 +13,8 @@ Question:
 {question}
 
 Answer:
-{answer}
 """
+
 
 def get_next_qa(dataset):
     for x in dataset:
@@ -46,9 +47,9 @@ class BabiqaDataset():
     def __getitem__(self,index):
         context, question, answer = self.data[index]
         cqa = {
-            "context":context,
-            "question":question,
-            "answer":answer
+            "context": context,
+            "question": question,
+            "answer": answer
         }
 
         if self.no_answer:
@@ -57,12 +58,34 @@ class BabiqaDataset():
         if self.retrun_object:
             return cqa
 
-        input_text = INPUT_TEMPLATE.format_map(cqa).strip()
-        encodings = self.tokenizer(input_text, truncation=True, max_length=384, return_tensors="pt")
-        encodings["labels"] = encodings["input_ids"].clone()
+        input_text = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
+        enc_input = self.tokenizer(input_text, truncation=True, add_special_tokens=False, return_tensors="pt")["input_ids"]
+
+        # train in Supervised fine-tuning mode:
+        if self.no_answer:
+            input_ids = enc_input
+        else:
+            enc_output = self.tokenizer(answer, truncation=True, add_special_tokens=False, return_tensors="pt")["input_ids"]
+
+            # combine into one sequence
+            input_ids = torch.cat([
+                enc_input,                                                      # (1, N)
+                enc_output,                                                     # (1, M)
+                torch.tensor([[self.tokenizer.eos_token_id]], dtype=torch.long) # (1, 1)
+            ], dim=1)                                                           # (1, N+M+1)=shape([0],[1])
+
+        # create new array
+        labels = input_ids.clone()
+
+        # masked only input_text:   [0, :N=enc_input(1, N)]
+        labels[0, :enc_input.size(1)] = -100
+
+        batch_max_length = max(len(item)+1 for item in input_ids)
+        assert batch_max_length <= 1024, f"batch_max_length={batch_max_length}<=1024: out of range"
+
         return {
-            "input_ids":encodings["input_ids"],
-            "labels":encodings["labels"]
+            "input_ids": input_ids,
+            "labels": labels,
         }
     
     def __len__(self):
@@ -81,6 +104,9 @@ def collate_data(batch, padding_value, label_padding_value=-100):
             new_batch[batch_key] = pad_sequence(new_batch[batch_key], batch_first=True, padding_value=label_padding_value)
         else:
             new_batch[batch_key] = pad_sequence(new_batch[batch_key], batch_first=True, padding_value=padding_value)
+
+    if "input_ids" in new_batch:
+        new_batch["attention_mask"] = (new_batch["input_ids"] != padding_value).long()
     
     return new_batch
 

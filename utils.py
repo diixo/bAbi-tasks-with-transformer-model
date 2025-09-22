@@ -1,7 +1,6 @@
 import re
 
 def remove_punctuation_wo_comma(text):
-    """移除標點符號，但是不包含逗號"""
     cleaned_text = re.sub(r"[^\w\s!,]", "", text)
     return cleaned_text
 
