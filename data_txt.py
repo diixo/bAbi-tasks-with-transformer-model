@@ -136,4 +136,3 @@ if __name__ == "__main__":
 
     babi = BabiqaText(None, "datasets/dataset.txt")
     print(len(babi))
-    print(babi[0])
