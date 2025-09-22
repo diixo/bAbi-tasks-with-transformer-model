@@ -1,0 +1,4 @@
+1 Sandra picked up the apple there.
+2	Sandra with apple
+1 Sandra picked up the apple.
+2	apple with Sandra
