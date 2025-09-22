@@ -36,7 +36,7 @@ def get_next_qa(dataset):
 
 class BabiqaDataset():
 
-    def __init__(self,tokenizer, task_no="qa1", split="train", no_answer=False, return_object=False) -> None:
+    def __init__(self,tokenizer, task_no="qa1", split="train", no_answer=False) -> None:
         self.tokenizer:PreTrainedTokenizer = tokenizer
         dataset = load_dataset('babi_qa', type='en', task_no=task_no)[split]
         self.data = list(get_next_qa(dataset))
@@ -114,4 +114,3 @@ def collate_data(batch, padding_value, label_padding_value=-100):
         new_batch["attention_mask"] = (new_batch["input_ids"] != padding_value).long()
     
     return new_batch
-
