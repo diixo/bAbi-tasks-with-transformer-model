@@ -24,7 +24,7 @@ if __name__ == "__main__":
     task_no = "qa1"
     test_dataset = BabiqaDataset(tokenizer, split="test", task_no=task_no, no_answer=True)
     test_dataset_raw = BabiqaDataset(
-        tokenizer, split="test", retrun_object=True, task_no=task_no
+        tokenizer, split="test", task_no=task_no, return_object=True
     )
 
     df = pd.DataFrame(
