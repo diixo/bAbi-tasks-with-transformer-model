@@ -29,7 +29,7 @@ pip install evaluate==0.4.6
 |  qa2  |  30  |    2e-04    |    8     |   445/1000   |             |
 |  qa2  |  30  |    1e-04    |    8     |   845/1000   |             |
 |  qa2  |  50  |    1e-04    |    8     |   865/1000   |   779/1000  |
-|  qa1 + qa2 | 50 | 1e-04    |    8     |     ???      |             |
+|  qa1 + qa2 | 50 | 1e-04    |    8     |   929/1000   |  1000/1000  |
 
 ## Tasks
 |task_no|task_name|
@@ -55,3 +55,7 @@ pip install evaluate==0.4.6
 |qa19| path-finding|
 |qa20| agents-motivations|
 
+
+## Acknowledgements:
+
+Based on original: https://github.com/p208p2002/bAbi-tasks-with-transformer-model
