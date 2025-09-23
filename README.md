@@ -25,6 +25,7 @@ pip install evaluate==0.4.6
 | qa-1  |  50  |    5e-05    |    8     |  1000/1000   |
 
 |task_no|epochs|learning_rate|batch_size| corrects/all |
+|-------|------|-------------|----------|--------------|
 | qa-2  |  30  |    2e-04    |    8     |   445/1000   |
 | qa-2  |  30  |    1e-04    |    8     |   845/1000   |
 
