@@ -46,24 +46,26 @@ class Trainer(DefaultTrainer):
         return self.lr_scheduler
 
 
-def make_dataset(tasks_amount=0):
-    if tasks_amount == 0:
-        tasks_amount = 20
+def make_dataset(task_number=0):
+    if task_number <= 0:
+        if task_number < 0:
+            task_number = abs(task_number)
+        else: task_number = 20
         train_ds = ConcatDataset(
             [
                 BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id+1}")
-                for task_id in range(tasks_amount)
+                for task_id in range(task_number)
             ]
         )
         test_ds = ConcatDataset(
             [
                 BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id+1}")
-                for task_id in range(tasks_amount)
+                for task_id in range(task_number)
             ]
         )
     else:
-        train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{tasks_amount}") ])
-        test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{tasks_amount}") ])
+        train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_number}") ])
+        test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_number}") ])
     return train_ds, test_ds
 
 
