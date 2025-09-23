@@ -1,4 +1,179 @@
-1 Sandra picked up the apple there.
-2	Sandra with apple
-1 Sandra picked up the apple.
-2	apple with Sandra
+1 Sandra picked up the apple there	Sandra=with:apple	1
+1 Sandra picked up the apple	Sandra=with:apple	1
+1 Sandra picked up the apple there	apple=with:Sandra	1
+1 Sandra picked up the apple	apple=with:Sandra	1
+
+1 John picked up the apple there	John=with:apple	1
+1 John picked up the apple	John=with:apple	1
+1 John picked up the apple there	apple=with:John	1
+1 John picked up the apple	apple=with:John	1
+
+1 Daniel picked up the apple there	Daniel=with:apple	1
+1 Daniel picked up the apple	Daniel=with:apple	1
+1 Daniel picked up the apple there	apple=with:Daniel	1
+1 Daniel picked up the apple	apple=with:Daniel	1
+
+1 Mary picked up the apple there	Mary=with:apple	1
+1 Mary picked up the apple	Mary=with:apple	1
+1 Mary picked up the apple there	apple=with:Mary	1
+1 Mary picked up the apple	apple=with:Mary	1
+
+1 Sandra picked up the milk there	Sandra=with:milk	1
+1 Sandra picked up the milk	Sandra=with:milk	1
+1 Sandra picked up the milk there	milk=with:Sandra	1
+1 Sandra picked up the milk	milk=with:Sandra	1
+
+1 John picked up the milk there	John=with:milk	1
+1 John picked up the milk	John=with:milk	1
+1 John picked up the milk there	milk=with:John	1
+1 John picked up the milk	milk=with:John	1
+
+1 Daniel picked up the milk there	Daniel=with:milk	1
+1 Daniel picked up the milk	Daniel=with:milk	1
+1 Daniel picked up the milk there	milk=with:Daniel	1
+1 Daniel picked up the milk	milk=with:Daniel	1
+
+1 Mary picked up the milk there	Mary=with:milk	1
+1 Mary picked up the milk	Mary=with:milk	1
+1 Mary picked up the milk there	milk=with:Mary	1
+1 Mary picked up the milk	milk=with:Mary	1
+
+1 Sandra got the milk there	Sandra=with:milk	1
+1 Sandra got the milk 	Sandra=with:milk	1
+1 Sandra got the milk there	milk=with:Sandra	1
+1 Sandra got the milk	milk=with:Sandra	1
+
+1 John got the milk there	John=with:milk	1
+1 John got the milk	John=with:milk	1
+1 John got the milk there	milk=with:John	1
+1 John got the milk	milk=with:John	1
+
+1 Daniel got the milk there	Daniel=with:milk	1
+1 Daniel got the milk	Daniel=with:milk	1
+1 Daniel got the milk there	milk=with:Daniel	1
+1 Daniel got the milk	milk=with:Daniel	1
+
+1 Mary got the milk there	Mary=with:milk	1
+1 Mary got the milk	Mary=with:milk	1
+1 Mary got the milk there	milk=with:Mary	1
+1 Mary got the milk	milk=with:Mary	1
+
+1 Sandra grabbed the football there	Sandra=with:football	1
+1 Sandra grabbed the football 	Sandra=with:football	1
+1 Sandra grabbed the football there	football=with:Sandra	1
+1 Sandra grabbed the football	football=with:Sandra	1
+
+1 John grabbed the football there	John=with:football	1
+1 John grabbed the football	John=with:football	1
+1 John grabbed the football there	football=with:John	1
+1 John grabbed the football	football=with:John	1
+
+1 Daniel grabbed the football there	Daniel=with:football	1
+1 Daniel grabbed the football	Daniel=with:football	1
+1 Daniel grabbed the football there	football=with:Daniel	1
+1 Daniel grabbed the football	football=with:Daniel	1
+
+1 Mary grabbed the football	Mary=with:football	1
+1 Mary grabbed the football	Mary=with:football	1
+1 Mary grabbed the football there	football=with:Mary	1
+1 Mary grabbed the football	football=with:Mary	1
+
+1 Sandra took the milk there	Sandra=with:milk	1
+1 Sandra took the milk 	Sandra=with:milk	1
+1 Sandra took the milk there	milk=with:Sandra	1
+1 Sandra took the milk	milk=with:Sandra	1
+
+1 John took the milk there	John=with:milk	1
+1 John took the milk	John=with:milk	1
+1 John took the milk there	milk=with:John	1
+1 John took the milk	milk=with:John	1
+
+1 Daniel took the milk there	Daniel=with:milk	1
+1 Daniel took the milk	Daniel=with:milk	1
+1 Daniel took the milk there	milk=with:Daniel	1
+1 Daniel took the milk	milk=with:Daniel	1
+
+1 Mary took the milk there	Mary=with:milk	1
+1 Mary took the milk	Mary=with:milk	1
+1 Mary took the milk there	milk=with:Mary	1
+1 Mary took the milk	milk=with:Mary	1
+
+1 Sandra took the football there	Sandra=with:football	1
+1 Sandra took the football 	Sandra=with:football	1
+1 Sandra took the football there	football=with:Sandra	1
+1 Sandra took the football	football=with:Sandra	1
+
+1 John took the football there	John=with:football	1
+1 John took the football	John=with:football	1
+1 John took the football there	football=with:John	1
+1 John took the football	football=with:John	1
+
+1 Daniel took the football there	Daniel=with:football	1
+1 Daniel took the football	Daniel=with:football	1
+1 Daniel took the football there	football=with:Daniel	1
+1 Daniel took the football	football=with:Daniel	1
+
+1 Mary took the football there	Mary=with:football	1
+1 Mary took the football	Mary=with:football	1
+1 Mary took the football there	football=with:Mary	1
+1 Mary took the football	football=with:Mary	1
+
+1 Sandra took the apple there	Sandra=with:apple	1
+1 Sandra took the apple 	Sandra=with:apple	1
+1 Sandra took the apple there	apple=with:Sandra	1
+1 Sandra took the apple	apple=with:Sandra	1
+
+1 John took the apple there	John=with:apple	1
+1 John took the apple	John=with:apple	1
+1 John took the apple there	apple=with:John	1
+1 John took the apple	apple=with:John	1
+
+1 Daniel took the apple there	Daniel=with:apple	1
+1 Daniel took the apple	Daniel=with:apple	1
+1 Daniel took the apple there	apple=with:Daniel	1
+1 Daniel took the apple	apple=with:Daniel	1
+
+1 Mary took the apple there	Mary=with:apple	1
+1 Mary took the apple	Mary=with:apple	1
+1 Mary took the apple there	apple=with:Mary	1
+1 Mary took the apple	apple=with:Mary	1
+
+1 Sandra grabbed the milk there	Sandra=with:milk	1
+1 Sandra grabbed the milk 	Sandra=with:milk	1
+1 Sandra grabbed the milk there	milk=with:Sandra	1
+1 Sandra grabbed the milk	milk=with:Sandra	1
+
+1 John grabbed the milk there	John=with:milk	1
+1 John grabbed the milk	John=with:milk	1
+1 John grabbed the milk there	milk=with:John	1
+1 John grabbed the milk	milk=with:John	1
+
+1 Daniel grabbed the milk there	Daniel=with:milk	1
+1 Daniel grabbed the milk	Daniel=with:milk	1
+1 Daniel grabbed the milk there	milk=with:Daniel	1
+1 Daniel grabbed the milk	milk=with:Daniel	1
+
+1 Mary grabbed the milk	Mary=with:milk	1
+1 Mary grabbed the milk	Mary=with:milk	1
+1 Mary grabbed the milk there	milk=with:Mary	1
+1 Mary grabbed the milk	milk=with:Mary	1
+
+1 Sandra grabbed the apple there	Sandra=with:apple	1
+1 Sandra grabbed the apple 	Sandra=with:apple	1
+1 Sandra grabbed the apple there	apple=with:Sandra	1
+1 Sandra grabbed the apple	apple=with:Sandra	1
+
+1 John grabbed the apple there	John=with:apple	1
+1 John grabbed the apple	John=with:apple	1
+1 John grabbed the apple there	apple=with:John	1
+1 John grabbed the apple	apple=with:John	1
+
+1 Daniel grabbed the apple there	Daniel=with:apple	1
+1 Daniel grabbed the apple	Daniel=with:apple	1
+1 Daniel grabbed the apple there	apple=with:Daniel	1
+1 Daniel grabbed the apple	apple=with:Daniel	1
+
+1 Mary grabbed the apple	Mary=with:apple	1
+1 Mary grabbed the apple	Mary=with:apple	1
+1 Mary grabbed the apple there	apple=with:Mary	1
+1 Mary grabbed the apple	apple=with:Mary	1
