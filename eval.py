@@ -1,7 +1,6 @@
 import evaluate
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from data import BabiqaDataset
-from data_txt import BabiqaText
 from utils import parse_answer
 import sys
 import torch
@@ -22,9 +21,9 @@ model.to(device)
 if __name__ == "__main__":
 #for task_id in range(1):
     #task_no = f"qa{task_id+1}"
+
     task_no = "qa1"
     test_dataset = BabiqaDataset(tokenizer, split="test", task_no=task_no, no_answer=True)
-    #test_dataset = BabiqaText(tokenizer, "datasets/babi-qa-shopping_test.txt", no_answer=True)
 
     df = pd.DataFrame(
         columns=["context", "question", "answer", "pred", "correct_or_not"]

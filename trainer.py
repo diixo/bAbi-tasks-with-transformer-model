@@ -1,6 +1,5 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer as DefaultTrainer
 from data import collate_data, BabiqaDataset
-from data_txt import BabiqaText
 from torch.utils.data import ConcatDataset
 import torch
 from transformers.optimization import get_scheduler
