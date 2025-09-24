@@ -194,7 +194,7 @@ def generate_v2(story_count: int) -> list:
 
         items.append(f"Assistant::System action {commodity} price")
 
-        price = random.randint(10, 159)
+        price = random.randint(10, 199)
         items.append(f"System::Assistant response {commodity} price={price}")
 
         items.append(f"Assistant: {commodity} price?\t{price}\t0")
