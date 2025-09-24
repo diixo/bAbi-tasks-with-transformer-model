@@ -91,68 +91,6 @@ def test():
         print("-------------------------------------------")
 
 
-def generate_q8(story_count: int) -> list:
-
-    stories = []
-
-    for _ in range(story_count):
-
-        items = []
-
-        on_sale = [assortment[0], assortment[1], assortment[2], assortment[3]]
-        commodity = random.choice(on_sale)
-
-        items.append(f"System: You are online shopping {random.choice(roles)}")
-
-        items.append(f"User: {random.choice(hi_user)} {random.choice(intents)} the {commodity}, {random.choice(sizes)}. Is it available?")
-
-        items.append(f"Assistant: API:action request={commodity}")
-
-        items.append(f"What API:action?\trequest\t0")
-        items.append(f"What API:action request for?\t{commodity}\t0")
-
-        amount = random.randint(1, 20)
-        items.append(f"API:action request {commodity} amount={amount}")
-
-        items.append(f"How many {commodity}?\t{amount}\t0")
-
-        items.append(f"User: Is {commodity} available in stock?\t{'yes'}\t0")
-
-        items.append(f"Assistant: Yes, it's in stock")
-
-        items.append(f"User: {random.choice(question_price)}")
-
-        items.append(f"Assistant: API:action price={commodity}")
-        price = random.randint(10, 159)
-        items.append(f"API:action price {commodity}={price}")
-
-        items.append(f"What API:action?\tprice\t0")
-        items.append(f"What API:action price for?\t{commodity}\t0")
-        items.append(f"What API:action price?\t{price}\t0")
-
-        items.append(f"Assistant: ${price}")
-
-        items.append(f"User: {random.choice(approve)} How long does delivery take?")
-        items.append("Assistant: Standard shipping takes 3-5 business days.")
-
-        choice = random.randint(0, 1)
-        if choice > 0:
-            #Customer: Perfect, I'll place the order.
-            #Seller: Thank you! I'll send you the payment link now.
-            #"Was an order placed?"
-            items.append(f"User: {random.choice(approve)} I'll take it.")
-            answer = "yes"
-        else:
-            items.append(f"User: No, {random.choice(waiting)}")
-            answer = "no"
-
-        items.append(f"{random.choice(question_intent)}\t{answer}\t0")
-
-        story = "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
-        stories.append(story)
-    return stories
-
-
 def generate_v2(story_count: int) -> list:
     stories = []
 
@@ -208,6 +146,8 @@ def generate_v2(story_count: int) -> list:
         if choice > 0:
             items.append(f"User: {random.choice(approve)} I'll place the order.")
             items.append(f"Assistant: Thank you! I'll send you the payment link after.")
+            #Customer: Perfect, I'll place the order.
+            #Seller: Thank you! I'll send you the payment link now.
             #"Was an order placed?"
             #items.append(f"User: {random.choice(approve)} I'll take it.")
             answer = "yes"
