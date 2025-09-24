@@ -64,12 +64,9 @@ def make_dataset(task_number=0):
                 for task_id in range(task_number)
             ]
         )
-    elif task_number <= 20:
+    else:
         train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_number}") ])
         test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_number}") ])
-    else:
-        train_ds = ConcatDataset([BabiqaText(tokenizer, "datasets/babi-qa-shopping_train.txt")])
-        test_ds = ConcatDataset([BabiqaText(tokenizer, "datasets/babi-qa-shopping_test.txt")])
     return train_ds, test_ds
 
 

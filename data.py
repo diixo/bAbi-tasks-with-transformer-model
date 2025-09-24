@@ -15,6 +15,47 @@ Question:
 Answer:
 """
 
+paths = {
+    "shopping": {
+        "qa21": {
+            "test": "datasets/babi-qa-shopping_test.txt",
+            "train": "datasets/babi-qa-shopping_train.txt",
+        },
+    },
+}
+
+
+def load_babi_txt(file_path: str) -> list:
+    """
+    Split bAbI txt specified file and return list of episodes:
+    [{'story': ..., 'question': ..., 'answer': ...}, ...]
+    """
+    examples = []
+    story_lines = []
+    with open(file_path, 'r', encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            # remove sentence number
+            idx, text = line.split(' ', 1)
+            idx = int(idx)
+
+            if '\t' in text:  # check marker of question line
+                question, answer, _ = text.split('\t')
+                # construct prompt: whole history before question
+                story = ' '.join(story_lines)
+                examples.append(
+                    (story, question, answer)
+                )
+            else:
+                story_lines.append(text)
+
+            # reset history by new episode (new marker == 1)
+            if idx == 1:
+                story_lines = [text]
+    return examples
+
 
 def get_next_qa(dataset):
     for x in dataset:
@@ -38,8 +79,14 @@ class BabiqaDataset():
 
     def __init__(self,tokenizer, task_no="qa1", split="train", no_answer=False) -> None:
         self.tokenizer:PreTrainedTokenizer = tokenizer
-        dataset = load_dataset('babi_qa', type='en', task_no=task_no)[split]
-        self.data = list(get_next_qa(dataset))
+
+        if task_no in paths['shopping']:
+            dataset = load_babi_txt(paths['shopping'][task_no][split])
+        else:
+            dataset = list(get_next_qa(
+                load_dataset('babi_qa', type='en', task_no=task_no)[split]
+            ))
+        self.data = dataset
         self.no_answer = no_answer
 
 
