@@ -36,11 +36,9 @@ def load_babi_txt(file_path: str) -> list:
                 question, answer, _ = text.split('\t')
                 # construct prompt: whole history before question
                 story = ' '.join(story_lines)
-                examples.append({
-                    'story': story,
-                    'question': question,
-                    'answer': answer
-                })
+                examples.append(
+                    (story, question, answer)
+                )
             else:
                 story_lines.append(text)
 
