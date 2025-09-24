@@ -25,8 +25,13 @@ colors = ["red", "blue", "green", "white", "beige", "black", "yellow", "grey",]
 
 intents = ["I'm interested in", "I want to buy",]
 
+hi_user = ["Hello,", "Hi,"]
 
-if __name__ == "__main__":
+approve = ["Ok.", "Great.", "Good.", "Okay.", "Perfect."]
+
+question_price = ["How much?", "Whats is the price?", "How much it cost?", "What price?"]
+
+def test():
 
     for id in range(10):
 
@@ -73,3 +78,59 @@ if __name__ == "__main__":
         print(id, item.strip())
         print("-------------------------------------------")
 
+
+def generate(story_count: int) -> list:
+
+    stories = []
+
+    for id in range(story_count):
+
+        items = []
+
+        on_sale = [assortment[0], assortment[1], assortment[2], assortment[3]]
+        commodity = random.choice(on_sale)
+
+        items.append(f"System: You are an online shopping {random.choice(roles)}")
+
+        items.append(f"User: {random.choice(hi_user)} {random.choice(intents)} the {commodity}, {random.choice(sizes)}. Is it available?")
+
+        items.append(f"Assistant: API:action request={commodity}")
+
+        items.append(f"What API:action?\trequest\t0")
+        items.append(f"What API:action request for?\t{commodity}\t0")
+
+        amount = random.randint(1, 20)
+        items.append(f"API:request {commodity} amount={amount}")
+
+        items.append(f"How many {commodity}?\t{amount}\t{len(items)}\t0")
+
+        items.append(f"User: Is {commodity} available in stock?\t{'yes'}\t0")
+
+        items.append(f"Assistant: Yes, it's in stock")
+
+        items.append(f"User: {random.choice(approve)} {random.choice(question_price)}")
+
+        items.append(f"Assistant: API:action price={commodity}")
+        price = random.randint(10, 129)
+        items.append(f"Assistant: API:price {commodity}={price}")
+
+        items.append(f"What API:action?\tprice\t0")
+        items.append(f"What API:action price for?\t{commodity}\t0")
+        items.append(f"What API:action price?\t{commodity}\t0")
+
+        items.append(f"Assistant: ${price}")
+
+        story = "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
+        stories.append(story)
+
+        #print(story)
+    return stories
+
+
+if __name__ == "__main__":
+
+    stories = generate(2)
+
+    with open("datasets/babi-shopping.txt", "w", encoding="utf-8") as f:
+        for story in stories:
+            f.write(story)
