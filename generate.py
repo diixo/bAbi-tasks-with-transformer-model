@@ -1,7 +1,8 @@
 
 import random
-import json
 
+
+random.seed(random.randint(1, 2080))
 
 INPUT_TEMPLATE = """
 ### Context:
@@ -29,7 +30,12 @@ hi_user = ["Hello,", "Hi,"]
 
 approve = ["Ok.", "Great.", "Good.", "Okay.", "Perfect."]
 
-question_price = ["How much?", "Whats is the price?", "How much it cost?", "What price?"]
+question_price = ["How much?", "Whats is the price?", "How much it cost?", "What price?", "How much is it?", "What's the price?"]
+
+question_intent = ["Purchase intent?", "Intent to buy?",]
+
+waiting = ["too long.", "too long to wait.", "too long of waiting."]
+
 
 def test():
 
@@ -79,18 +85,18 @@ def test():
         print("-------------------------------------------")
 
 
-def generate(story_count: int) -> list:
+def generate_q8(story_count: int) -> list:
 
     stories = []
 
-    for id in range(story_count):
+    for _ in range(story_count):
 
         items = []
 
         on_sale = [assortment[0], assortment[1], assortment[2], assortment[3]]
         commodity = random.choice(on_sale)
 
-        items.append(f"System: You are an online shopping {random.choice(roles)}")
+        items.append(f"System: You are online shopping {random.choice(roles)}")
 
         items.append(f"User: {random.choice(hi_user)} {random.choice(intents)} the {commodity}, {random.choice(sizes)}. Is it available?")
 
@@ -100,37 +106,56 @@ def generate(story_count: int) -> list:
         items.append(f"What API:action request for?\t{commodity}\t0")
 
         amount = random.randint(1, 20)
-        items.append(f"API:request {commodity} amount={amount}")
+        items.append(f"API:action request {commodity} amount={amount}")
 
-        items.append(f"How many {commodity}?\t{amount}\t{len(items)}\t0")
+        items.append(f"How many {commodity}?\t{amount}\t0")
 
         items.append(f"User: Is {commodity} available in stock?\t{'yes'}\t0")
 
         items.append(f"Assistant: Yes, it's in stock")
 
-        items.append(f"User: {random.choice(approve)} {random.choice(question_price)}")
+        items.append(f"User: {random.choice(question_price)}")
 
         items.append(f"Assistant: API:action price={commodity}")
-        price = random.randint(10, 129)
-        items.append(f"Assistant: API:price {commodity}={price}")
+        price = random.randint(10, 159)
+        items.append(f"API:action price {commodity}={price}")
 
         items.append(f"What API:action?\tprice\t0")
         items.append(f"What API:action price for?\t{commodity}\t0")
-        items.append(f"What API:action price?\t{commodity}\t0")
+        items.append(f"What API:action price?\t{price}\t0")
 
         items.append(f"Assistant: ${price}")
+
+        items.append(f"User: {random.choice(approve)} How long does delivery take?")
+        items.append("Assistant: Standard shipping takes 3-5 business days.")
+
+        choice = random.randint(0, 1)
+        if choice > 0:
+            #Customer: Perfect, I’ll place the order.
+            #Seller: Thank you! I’ll send you the payment link now.
+            items.append(f"User: {random.choice(approve)} I'll take it.")
+            answer = "yes"
+        else:
+            items.append(f"User: No, {random.choice(waiting)}")
+            answer = "no"
+
+        items.append(f"{random.choice(question_intent)}\t{answer}\t0")
 
         story = "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
         stories.append(story)
 
-        #print(story)
     return stories
 
 
 if __name__ == "__main__":
 
-    stories = generate(2)
+    samples = 2000
+    question_per_story = 8
+    stories = int(samples / question_per_story)
+    print(f"sampeles={samples}, question_per_story={question_per_story}, stories={stories}")
 
-    with open("datasets/babi-shopping.txt", "w", encoding="utf-8") as f:
-        for story in stories:
-            f.write(story)
+    train_stories = generate_q8(stories)
+
+    with open("datasets/babi-qa-shopping_train.txt", "w", encoding="utf-8") as f:
+        f.writelines(train_stories)
+
