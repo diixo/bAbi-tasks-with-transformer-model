@@ -18,8 +18,8 @@ Answer:
 paths = {
     "shopping": {
         "qa21": {
-            "test": "datasets/babi-qa-shopping_test.txt",
-            "train": "datasets/babi-qa-shopping_train.txt",
+            "test": "datasets/qa21-shopping-dialogue_test.txt",
+            "train": "datasets/qa21-shopping-dialogue_train.txt",
         },
     },
 }

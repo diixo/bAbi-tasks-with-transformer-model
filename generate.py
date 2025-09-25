@@ -210,10 +210,10 @@ if __name__ == "__main__":
 
     train_stories = generate_v2(200)
 
-    with open("datasets/babi-qa-shopping_train.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa21-shopping-dialogue_train.txt", "w", encoding="utf-8") as f:
         f.writelines(train_stories)
 
     test_stories = generate_v2(200)
 
-    with open("datasets/babi-qa-shopping_test.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa21-shopping-dialogue_test.txt", "w", encoding="utf-8") as f:
         f.writelines(test_stories)
