@@ -47,54 +47,6 @@ question_available = [
 waiting = ["too long.", "too long to wait.", "too long of waiting."]
 
 
-def test():
-
-    for id in range(10):
-
-        on_sale = [assortment[0], assortment[1], assortment[2], assortment[3]]
-        commodity = random.choice(assortment)
-
-        context = f"You are {random.choice(roles)}. Sales assortment: {on_sale[0]}, {on_sale[1]}, {on_sale[2]}, {on_sale[3]}"
-
-        question = f"Hello, {random.choice(intents)} the {commodity}, {random.choice(sizes)}. Is it available?"
-
-        answer = "yes" if commodity in on_sale else "no"
-
-        cqa = {
-            "context": context,
-            "question": question,
-            "answer": answer
-        }
-
-        item = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
-
-        print(id, item.strip())
-        print("-------------------------------------------")
-
-
-    for id in range(10):
-
-        on_sale = [assortment[0], assortment[1], assortment[2], assortment[3]]
-        commodity = random.choice(assortment)
-
-        context = f"You are an online shopping {random.choice(roles)}. Sales assortment: {on_sale[0]}, {on_sale[1]}, {on_sale[2]}, {on_sale[3]}"
-
-        question = f"Hi, is the {commodity} still available in {random.choice(sizes)}?"
-
-        answer = "yes" if commodity in on_sale else "no"
-
-        cqa = {
-            "context": context,
-            "question": question,
-            "answer": answer
-        }
-
-        item = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
-
-        print(id, item.strip())
-        print("-------------------------------------------")
-
-
 def items_to_story(items: list) -> str:
     return "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
 
