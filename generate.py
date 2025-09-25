@@ -18,7 +18,11 @@ INPUT_TEMPLATE = """
 
 roles = ["assistant", "Assistant",]
 
-assortment = ["T-shirt", "dress", "sweater", "jacket", "skirt", "pants", "jeans", "bodice",]
+#assortment_ext = ["headscarf", "shawl",]
+
+assortment = ["T-shirt", "dress", "sweater", "shirt", "jacket", "skirt", "scarf", "backpack", "bodice", "hoodie",]
+
+assortment_s = ["T-shirts", "dresses", "sweaters", "shirts", "jackets", "skirts", "scarves", "backpacks", "bodices", "hoodies",]
 
 sizes = ["size XS", "size S", "size M", "size L", "size XL", "size XXL",]
 
@@ -91,6 +95,10 @@ def test():
         print("-------------------------------------------")
 
 
+def items_to_story(items: list) -> str:
+    return "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
+
+
 def generate_v2(story_count: int) -> list:
     stories = []
 
@@ -158,9 +166,144 @@ def generate_v2(story_count: int) -> list:
         items.append(f"Will an order be placed?\t{answer}\t0")
         items.append(f"{random.choice(question_intent)}\t{answer}\t0")
 
-        story = "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
-        stories.append(story)
+        stories.append(items_to_story(items))
     return stories
+
+
+def generate_v3():
+
+    available_txt = [
+        "The following items are available:",
+        "Items in stock:",
+        "Available items:",
+        "Our product range includes:",
+        "Product range:",
+        "Sales range includes:",
+        "Our assortment in stock includes:",
+        "Items currently in stock:",
+        "Our available assortment:",
+        "Products we have in stock:",
+        ]
+    add_to_cart = [
+        "You need to add all the items to your shopping cart.",
+        "Please make sure to add all the items to your cart.",
+        "All items must be added to the shopping cart.",
+        ]
+
+    ask_forgot_item = [
+        "What was the order forgotten for?",
+        "Which item was the order forgotten for?",
+        "What item was missed in the order?",
+        "What item was the order forgotten for?",
+        "Which item did we forget to order?",
+    ]
+
+    # ask_forgot_about = [
+    #     "Was an order forgotten for something?",
+    #     "Was an order left unplaced for something?",
+    #     "Did we forget to order something?",
+    #     "Was there something we forgot to order?",
+    # ]
+
+    p1 = random.randint(0, 1)
+    p2 = random.randint(2, 3)
+    p3 = random.randint(4, 5)   # to ask as missing item
+    p4 = random.randint(6, 7)
+    p5 = random.randint(8, 9)
+
+    items = []
+    items.append(f"System: You are online shopping {random.choice(roles)}")
+    items.append(f"Assistant: {random.choice(available_txt)} {assortment_s[p1]}, {assortment_s[p2]}, {assortment_s[p3]}, {assortment_s[p4]}, {assortment_s[p5]}")
+    items.append(f"User: I'll {random.choice(['take', 'purchase', 'have to buy',])} the {assortment[p5]}, the {assortment[p1]}, the {assortment[p4]}, the {assortment[p3]}, the {assortment[p2]}.")
+    items.append(f"Assistant: {random.choice(add_to_cart)}")
+    items.append(f"User: I have added the {assortment[p4]}, the {assortment[p1]}, the {assortment[p5]}, the {assortment[p2]} to the card.")
+
+    about_forgot = [
+        "It seems you forgot to add another item from the ones you wanted.",
+        "It seems you didn't add all the items you wanted.",
+        "It seems some items you wanted are missing in the card.",
+        "It looks like not all items you wanted are in the card.",
+    ]
+
+    items.append(f"Assistant: {random.choice(about_forgot)}")
+
+    items.append(f"{random.choice(ask_forgot_item)}\t{assortment[p3]}\t0")
+
+    #reaction_1 = ["Exactly, I forgot.", "Yes, I forgot.", ]
+    #reaction_2 = ["Yes, I know.", "Yes, I'm aware."]
+
+    agree = ["Yes, that's right.", "Yes, you are right.",]
+
+    req_add = [
+        "Add missing item to order.",
+
+        "I forgot. Please add the missing item.",
+        "I forgot. Add the one I missed.",
+
+        "Add the remaining item to complete my order.",
+        "Complete the order with the missing item.",
+        "Add the missing item to complete my order.",
+    ]
+
+    req_skip = [
+        "Yes, I know. Leave it as is.",
+        "Yes, I'm aware. Keep it as it is.",
+        "Yes, That's correct. Skip it.",
+        "Yes, Exactly. You can skip that one.",
+    ]
+
+    turn = random.randint(0, 1)
+    if turn > 0:    # add item
+        items.append(f"User: {random.choice(agree)} {random.choice(req_add)}")
+        turn = "yes"
+        question = [
+            "Which item should be added to the order?",
+            "What item should the order be completed with?",
+            "Which item should be added to expand the order?",
+            "What item should be included to extend the order?",
+        ]
+    else:
+        items.append(f"User: {random.choice(req_skip)}")
+        turn = "no"
+        question = [
+            "Which item in the order should be skipped?",
+            "Which item should be left out of the order?",
+            "Which item are we skipping in the order?",
+        ]
+
+    ############### proposition to ask of adding new item
+    q_propose = [
+        "Would it be appropriate to suggest adding the missing item?",
+        "Is it necessary to suggest adding the missing item?",
+        "Is it necessary to propose adding the missing item?",
+    ]
+
+    # try to understand the necessity to ask adding new item by answer
+
+    items.append(f"{random.choice(q_propose)}\t{turn}\t0")
+
+    ###############################################################
+    items.append(f"{random.choice(question)}\t{assortment[p3]}\t0")
+
+
+    q_confirm = [
+        "Was the order confirmed for all the items",
+        "Has the order been confirmed for all the items",
+        "Has the order been confirmed for all these items",
+        "Was the order placed for all following items",
+    ]
+    items.append(f"{random.choice(q_confirm)}: the {assortment[p2]}, the {assortment[p3]}, the {assortment[p5]}, the {assortment[p1]}, the {assortment[p4]}?\t{turn}\t0")
+
+    q_confirm = [
+        "Are all these items included in the list",
+        "Do all these items appear list",
+        "Are all of these items in the list",
+        "Does the order include all these list",
+    ]
+    items.append(f"{random.choice(q_confirm)}: the {assortment[p1]}, the {assortment[p4]}, the {assortment[p2]}, the {assortment[p3]}?\t{turn}\t0")
+
+    print(items_to_story(items))
+
 
 
 actions = [
@@ -208,12 +351,15 @@ if __name__ == "__main__":
     stories = int(samples / question_per_story)
     print(f"sampeles={samples}, question_per_story={question_per_story}, stories={stories}")
 
-    train_stories = generate_v2(200)
+    if False:
+        train_stories = generate_v2(200)
 
-    with open("datasets/qa21-shopping-dialogue_train.txt", "w", encoding="utf-8") as f:
-        f.writelines(train_stories)
+        with open("datasets/qa21-shopping-dialogue_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_stories)
 
-    test_stories = generate_v2(200)
+        test_stories = generate_v2(200)
 
-    with open("datasets/qa21-shopping-dialogue_test.txt", "w", encoding="utf-8") as f:
-        f.writelines(test_stories)
+        with open("datasets/qa21-shopping-dialogue_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_stories)
+
+    generate_v3()
