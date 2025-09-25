@@ -128,7 +128,7 @@ def generate_v2(samples: int) -> list:
 
 def generate_v3(samples: int) -> list:
 
-    question_per_story = 4
+    question_per_story = 5
     story_count = int(samples / question_per_story)
 
     stories = []
