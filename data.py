@@ -21,6 +21,10 @@ paths = {
             "test": "datasets/qa21-shopping-dialogue_test.txt",
             "train": "datasets/qa21-shopping-dialogue_train.txt",
         },
+        "qa22": {
+            "test": "datasets/qa22-shopping-items_test.txt",
+            "train": "datasets/qa22-shopping-items_train.txt",
+        },
     },
 }
 
@@ -165,3 +169,9 @@ def collate_data(batch, padding_value, label_padding_value=-100):
         new_batch["attention_mask"] = (new_batch["input_ids"] != padding_value).long()
     
     return new_batch
+
+
+if __name__ == "__main__":
+
+    babi = BabiqaDataset(None, split="train", task_no="qa22")
+    print(len(babi))
