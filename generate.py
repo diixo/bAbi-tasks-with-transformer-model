@@ -288,6 +288,7 @@ def generate_v3(samples: int) -> list:
             ]
 
         ############### proposition to ask of adding new item
+
         q_propose = [
             "Would it be appropriate to suggest adding the missing item?",
             "Is it necessary to suggest adding the missing item?",
@@ -316,6 +317,17 @@ def generate_v3(samples: int) -> list:
         ]
         items.append(f"{random.choice(q_confirm)}: the {assortment[p1]}, the {assortment[p4]}, the {assortment[p2]}, the {assortment[p3]}?\t{turn}\t0")
 
+        ask_confirmation = [
+            "Do you want to confirm the purchase?",
+            "Would you like to confirm your order?",
+            "Shall I confirm the purchase for you?",
+        ]
+
+        items.append(f"Assistant: {random.choice(ask_confirmation)}")
+        items.append("User: yes")
+        items.append("Assistant: I will send you a link for online payment.")
+
+        #####################################################################
         #print(items_to_story(items))
         stories.append(items_to_story(items))
 
