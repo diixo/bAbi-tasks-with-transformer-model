@@ -10,32 +10,32 @@ class Chatbot_gpt2:
         self.system_prompt = system_prompt
         self.tokenizer = GPT2Tokenizer.from_pretrained(model_dir)
         self.model = GPT2LMHeadModel.from_pretrained(model_dir)
-        #check_special_tokens(self.tokenizer)
 
 
     def build_prompt(self, conversation_history, user_message):
         # Create prompt for model in format:
         """
-        <|im_start|>system
-        {system_message}<|im_end|>
-        <|im_start|>user
-        {user_message}<|im_end|>
-        <|im_start|>assistant
+        System:
+        {system_message}
+        User:
+        {user_message}
+        Assistant:
+        {response}
         """
-        prompt = f"<|im_start|>system\n{self.system_prompt}<|im_end|>\n"
+        prompt = f"System:\n{self.system_prompt}\n"
 
         for role, content in conversation_history:
             if role == "user":
-                prompt += f"<|im_start|>user\n{content}<|im_end|>\n"
+                prompt += f"User:\n{content}\n"
             elif role == "assistant":
-                prompt += f"<|im_start|>assistant\n{content}<|im_end|>\n"
+                prompt += f"Assistant:\n{content}\n"
 
-        prompt += f"<|im_start|>user\n{user_message}<|im_end|>\n"
-        prompt += f"<|im_start|>assistant\n"
+        prompt += f"User:\n{user_message}\n"
+        prompt += f"Assistant:\n"
         return prompt
 
 
-    def generate_llm_response(self, prompt, max_new_tokens=100):
+    def generate_response(self, prompt, max_new_tokens=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
         outputs = self.model.generate(
             **inputs,
@@ -58,7 +58,7 @@ class Chatbot_gpt2:
         prompt = self.build_prompt(conversation_history, user_message)
 
         # LLM response
-        assistant_reply = self.generate_llm_response(prompt)
+        assistant_reply = self.generate_response(prompt)
 
         # Update history
         conversation_history.append(("user", user_message))
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     conversation_history = deque(maxlen=4)
 
-    chat = Chatbot_gpt2("You are helpful car driver assistant.")
+    chat = Chatbot_gpt2("You are online shopping Assistant.")
 
     while True:
         user_message = input("User: ")
