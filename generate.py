@@ -124,7 +124,7 @@ def generate_v2(samples: int) -> list:
         choice = random.randint(0, 1)
         if choice > 0:
             items.append(f"User: {random.choice(approve)} I'll place the order.")
-            items.append(f"Assistant: Thank you! I'll send you the payment link after.")
+            items.append(f"Assistant: Thank you! I will send you the payment link after.")
             #Customer: Perfect, I'll place the order.
             #Seller: Thank you! I'll send you the payment link now.
             #"Was an order placed?"
@@ -141,12 +141,26 @@ def generate_v2(samples: int) -> list:
     return stories
 
 
+def items_to_turns(items: list[str]) -> list:
+    turn_list = []
+    for item in items:
+        if item.find("System: ") == 0 or item.find("User:") == 0:
+            turn_list.append(item)
+        if item.find("Assistant: ") == 0:
+            separator = item.find(":")
+            assistant = item[:separator+1]
+            utterance = item[separator+1:]
+            turn_list.append(f"{assistant.strip()}\t{utterance.strip()}\t0")
+    return turn_list
+
+
 def generate_v3(samples: int) -> list:
 
     question_per_story = 5
     story_count = int(samples / question_per_story)
 
     stories = []
+    turns = []
 
     for _ in range(story_count):
 
@@ -287,7 +301,7 @@ def generate_v3(samples: int) -> list:
         items.append(f"{random.choice(question)}\t{assortment[p3]}\t0")
 
         q_confirm = [
-            "Was the order confirmed for all the items",
+            "Was the order confirmed for all these items",
             "Has the order been confirmed for all the items",
             "Has the order been confirmed for all these items",
             "Was the order placed for all following items",
@@ -302,10 +316,13 @@ def generate_v3(samples: int) -> list:
         ]
         items.append(f"{random.choice(q_confirm)}: the {assortment[p1]}, the {assortment[p4]}, the {assortment[p2]}, the {assortment[p3]}?\t{turn}\t0")
 
-        print(items_to_story(items))
+        #print(items_to_story(items))
         stories.append(items_to_story(items))
-    return stories
 
+        turns.append(
+            items_to_story(items_to_turns(items))
+            )
+    return stories, turns
 
 
 actions = [
@@ -363,14 +380,20 @@ if __name__ == "__main__":
             f.writelines(test_stories)
     else:
 
-        train_stories = generate_v3(samples)
+        train_stories, train_turns = generate_v3(samples)
 
         with open("datasets/qa22-shopping-items_train.txt", "w", encoding="utf-8") as f:
             f.writelines(train_stories)
 
-        test_stories = generate_v3(samples)
+        with open("datasets/qa23-shopping-turns_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_turns)
+
+        test_stories, test_turns = generate_v3(samples)
 
         with open("datasets/qa22-shopping-items_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_stories)
+
+        with open("datasets/qa23-shopping-turns_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_turns)
 
     print(f"sampeles={samples}")

@@ -18,12 +18,16 @@ Answer:
 paths = {
     "shopping": {
         "qa21": {
-            "test": "datasets/qa21-shopping-dialogue_test.txt",
             "train": "datasets/qa21-shopping-dialogue_train.txt",
+            "test": "datasets/qa21-shopping-dialogue_test.txt",
         },
         "qa22": {
-            "test": "datasets/qa22-shopping-items_test.txt",
             "train": "datasets/qa22-shopping-items_train.txt",
+            "test": "datasets/qa22-shopping-items_test.txt",
+        },
+        "qa23": {
+            "train": "datasets/qa23-shopping-turns_train.txt",
+            "test": "datasets/qa23-shopping-turns_test.txt",
         },
     },
 }
