@@ -15,6 +15,21 @@ INPUT_TEMPLATE = """
 {answer}
 """
 
+welcome_search = [
+    "What product are you interested in?",
+    "Which product are you looking for?",
+    "What item are you interested in?",
+
+    "Which product would you like to purchase?",
+    "What product would you like to buy?",
+    "Which item are you planning to purchase?",
+]
+
+welcome_help = [
+    "Which product can I help you with?",
+    "How can I assist you with your product search?",
+    "Is there a particular product you'd like help with?",
+]
 
 roles = ["assistant", "Assistant",]
 
@@ -147,6 +162,7 @@ def generate_v3(samples: int) -> list:
             "Our available assortment:",
             "Products we have in stock:",
             ]
+
         add_to_cart = [
             "You need to add all the items to your shopping cart.",
             "Please make sure to add all the items to your cart.",
@@ -174,11 +190,34 @@ def generate_v3(samples: int) -> list:
         p4 = random.randint(6, 7)
         p5 = random.randint(8, 9)
 
+        ask_avaliability = [
+            "Can you check if it is in stock?",
+            "Could you verify if it's available?",
+            "Can you see whether it's available?",
+            "Could you check the availability?",
+        ]
+
+        interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
+
+        checking = ["Let me check"]
+
         items = []
-        items.append(f"System: You are online shopping {random.choice(roles)}")
-        items.append(f"Assistant: {random.choice(available_txt)} {assortment_s[p1]}, {assortment_s[p2]}, {assortment_s[p3]}, {assortment_s[p4]}, {assortment_s[p5]}")
-        items.append(f"User: I'll {random.choice(['take', 'purchase', 'have to buy',])} the {assortment[p5]}, the {assortment[p1]}, the {assortment[p4]}, the {assortment[p3]}, the {assortment[p2]}.")
+        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {assortment_s[p1]}, {assortment_s[p2]}, {assortment_s[p3]}, {assortment_s[p4]}, {assortment_s[p5]}")
+        items.append(f"Assistant: {random.choice(welcome_search)}")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[p5]}. {random.choice(ask_avaliability)}")
+        items.append(f"Assistant: Yes, it is available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[p1]}. {random.choice(ask_avaliability)}")
+        items.append(f"Assistant: Sure. Yes, it\'s available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[p4]}. {random.choice(ask_avaliability)}")
+        items.append(f"Assistant: Yes, it is available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[p3]}. {random.choice(ask_avaliability)}")
+        items.append(f"Assistant: Yes, it\'s available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[p2]}. {random.choice(ask_avaliability)}")
+        items.append(f"Assistant: Let me check. Yes, it is available.")
+
+        items.append(f"User: I am ready to buy all this.")
         items.append(f"Assistant: {random.choice(add_to_cart)}")
+
         items.append(f"User: I have added the {assortment[p4]}, the {assortment[p1]}, the {assortment[p5]}, the {assortment[p2]} to the card.")
 
         about_forgot = [
@@ -242,12 +281,10 @@ def generate_v3(samples: int) -> list:
         ]
 
         # try to understand the necessity to ask adding new item by answer
-
         items.append(f"{random.choice(q_propose)}\t{turn}\t0")
 
         ###############################################################
         items.append(f"{random.choice(question)}\t{assortment[p3]}\t0")
-
 
         q_confirm = [
             "Was the order confirmed for all the items",
@@ -265,7 +302,7 @@ def generate_v3(samples: int) -> list:
         ]
         items.append(f"{random.choice(q_confirm)}: the {assortment[p1]}, the {assortment[p4]}, the {assortment[p2]}, the {assortment[p3]}?\t{turn}\t0")
 
-        #print(items_to_story(items))
+        print(items_to_story(items))
         stories.append(items_to_story(items))
     return stories
 
