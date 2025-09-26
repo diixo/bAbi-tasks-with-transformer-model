@@ -319,9 +319,10 @@ def generate_v3(samples: int) -> list:
         #print(items_to_story(items))
         stories.append(items_to_story(items))
 
-        turns.append(
-            items_to_story(items_to_turns(items))
-            )
+        if len(turns) < samples:
+            turns.append(
+                items_to_story(items_to_turns(items))
+                )
     return stories, turns
 
 
