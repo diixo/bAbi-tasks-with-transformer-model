@@ -46,7 +46,9 @@ def load_babi_txt(file_path: str) -> list:
             idx = int(idx)
 
             if '\t' in text:  # check marker of question line
-                question, answer, _ = text.split('\t')
+                question, answer, stub = text.split('\t')
+                if answer.strip() == "?":
+                    answer = stub
                 # construct prompt: whole history before question
                 story = ' '.join(story_lines)
                 examples.append(
