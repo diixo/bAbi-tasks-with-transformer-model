@@ -8,6 +8,8 @@ import pandas as pd
 import os
 
 
+task_no = "qa22"
+
 #model_dir = sys.argv[-1]
 model_dir = "gpt2-babi"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -22,7 +24,6 @@ if __name__ == "__main__":
 #for task_id in range(1):
     #task_no = f"qa{task_id+1}"
 
-    task_no = "qa21"
     test_dataset = BabiqaDataset(tokenizer, split="test", task_no=task_no, no_answer=True)
 
     df = pd.DataFrame(
@@ -80,7 +81,7 @@ if __name__ == "__main__":
 
     metric = evaluate.load("accuracy")
     accuracy = metric.compute(predictions=model_prediction, references=references)
-    print(f"dataset={task_no},", accuracy, f"correct/all: {correct}/{len(model_prediction)}")
+    print(f"dataset: {task_no}, accuracy: {accuracy['accuracy']:.6f}, correct/all: {correct}/{len(model_prediction)}")
     acc = accuracy["accuracy"]
     os.makedirs("eval-results", exist_ok=True)
     df.to_csv(f"eval-results/{task_no}_{round(acc*100, 2)}.csv")
