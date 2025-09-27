@@ -151,7 +151,7 @@ def items_to_turns(items: list[str]) -> list:
             assistant = item[:separator+1]
             utterance = item[separator+1:]
             turn_list.append(f"{assistant.strip()}\t{utterance.strip()}\t0")
-    return turn_list
+    return turn_list, 10
 
 
 def generate_v3(samples: int) -> list:
@@ -160,7 +160,7 @@ def generate_v3(samples: int) -> list:
     story_count = int(samples / question_per_story)
 
     stories = []
-    turns = []
+    turn_stories = []
 
     for _ in range(story_count):
 
@@ -212,8 +212,6 @@ def generate_v3(samples: int) -> list:
         ]
 
         interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
-
-        checking = ["Let me check"]
 
         items = []
         items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {assortment_s[p1]}, {assortment_s[p2]}, {assortment_s[p3]}, {assortment_s[p4]}, {assortment_s[p5]}")
@@ -331,11 +329,12 @@ def generate_v3(samples: int) -> list:
         #print(items_to_story(items))
         stories.append(items_to_story(items))
 
-        if len(turns) < samples:
-            turns.append(
-                items_to_story(items_to_turns(items))
-                )
-    return stories, turns
+        turns, turns_per_story = items_to_turns(items)
+
+        if len(turn_stories) < (samples / turns_per_story):
+            turn_stories.append(items_to_story(turns))
+
+    return stories, turn_stories
 
 
 actions = [
@@ -409,4 +408,4 @@ if __name__ == "__main__":
         with open("datasets/qa23-shopping-turns_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
 
-    print(f"sampeles={samples}")
+    print(f"sampeles={samples}, {len(train_turns)}")
