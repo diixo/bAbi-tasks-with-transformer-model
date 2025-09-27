@@ -30,7 +30,8 @@ class Chatbot_gpt2:
             elif role == "assistant":
                 prompt += f"Assistant:\n{content}\n"
 
-        prompt += f"User:\n{user_message}\n"
+        if user_message:
+            prompt += f"User:\n{user_message}\n"
         prompt += f"Assistant:\n"
         return prompt
 
@@ -40,30 +41,30 @@ class Chatbot_gpt2:
         outputs = self.model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
-            do_sample=True,
-            temperature=0.7,
-            top_p=0.8,
+            do_sample=False,
             pad_token_id=self.tokenizer.eos_token_id
-        )
-        text = self.tokenizer.decode(outputs[0], skip_special_tokens=False)
-        marker = "<|im_start|> assistant"
+        )[0]
+        text = self.tokenizer.decode(outputs, skip_special_tokens=True)
+        marker = "Assistant:"
         if marker in text:
             text = text.split(marker)[-1].strip()
-            text = text.split("<|im_end|>")[0].strip()
         return text
 
 
-    def handle_user_message(self, conversation_history, user_message):
+    def handle_user_message(self, conversation_history, user_message=None):
         # Build prompt
         prompt = self.build_prompt(conversation_history, user_message)
 
-        # LLM response
+        # create response
         assistant_reply = self.generate_response(prompt)
 
-        # Update history
-        conversation_history.append(("user", user_message))
+        # Update history by pair: user+prompt.
+        if user_message:
+            conversation_history.append(("user", user_message))
+        else: # init, appand prompt as welcole-message
+            assistant_reply = prompt + assistant_reply
         conversation_history.append(("assistant", assistant_reply))
-        # TODO: return real mood-level
+
         return assistant_reply, conversation_history
 
 
@@ -71,7 +72,10 @@ if __name__ == "__main__":
 
     conversation_history = deque(maxlen=4)
 
-    chat = Chatbot_gpt2("You are online shopping Assistant.")
+    chat = Chatbot_gpt2("You are online shopping Assistant. Assortment includes the whole range of products.")
+    start_prompt, conversation_history = chat.handle_user_message(conversation_history)
+    
+    print(f"{80*'-'}\n{start_prompt}")
 
     while True:
         user_message = input("User: ")
