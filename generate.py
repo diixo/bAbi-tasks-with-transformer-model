@@ -168,8 +168,8 @@ def generate_v3(samples: int) -> list:
             "The following items are available:",
             "Items in stock:",
             "Available items:",
-            "Our product range includes:",
-            "Product range:",
+            "Products range includes:",
+            "Products range:",
             "Sales range includes:",
             "Our assortment in stock includes:",
             "Items currently in stock:",
@@ -345,34 +345,6 @@ actions = [
     "request delivery details"
 ]
 
-
-def generate_order_dialogue():
-    dialogue = []
-    customer = "User"
-    seller = "Assistant"
-
-    action = random.choice(actions[:2])  # чаще place/confirm
-    #dialogue.append(f"{customer} wants to {action}.")
-    dialogue.append(f"{customer}: Hello, I would like to {action}.")
-    dialogue.append(f"{seller}: Sure, your request to {action} has been received.")
-
-    for _ in range(random.randint(1, 2)):
-        next_action = random.choice(actions[1:])
-        dialogue.append(f"{customer}: I want to {next_action}.")
-        dialogue.append(f"{seller}: Your request to {next_action} has been processed.")
-
-    story = "".join([ f"{id+1} {item}\n" for id, item in enumerate(dialogue) ])
-
-    print(story)
-    #“Was John’s order confirmed?” “Yes.” or “No.”
-
-    #“What actions were taken regarding Emma’s order?”
-    #“Placed, confirmed, requested delivery details.”
-
-    #“Was John’s order=.. confirmed?”“Yes.” или “No.”
-    #“Was order=.. cancelled?”
-
-    return dialogue
 
 
 if __name__ == "__main__":
