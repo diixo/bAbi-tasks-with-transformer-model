@@ -349,7 +349,7 @@ actions = [
 
 if __name__ == "__main__":
 
-    samples = 1000
+    samples = 2000
 
     if False:
 
