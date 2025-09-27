@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
     conversation_history = deque(maxlen=4)
 
-    chat = Chatbot_gpt2("You are online shopping Assistant. Assortment includes the whole range of products.")
+    chat = Chatbot_gpt2("You are online shopping Assistant.")
     start_prompt, conversation_history = chat.handle_user_message(conversation_history)
     
     print(f"{80*'-'}\n{start_prompt}")
