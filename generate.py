@@ -15,6 +15,19 @@ INPUT_TEMPLATE = """
 {answer}
 """
 
+available_txt = [
+    "The following items are available:",
+    "Items in stock:",
+    "Available items:",
+    "Products range includes:",
+    "Products range:",
+    "Sales range includes:",
+    "Our assortment in stock includes:",
+    "Items currently in stock:",
+    "Our available assortment:",
+    "Products, that have in stock:",
+    ]
+
 welcome_search = [
     "What product are you interested in?",
     "Which product are you looking for?",
@@ -33,11 +46,12 @@ welcome_help = [
 
 roles = ["assistant", "Assistant",]
 
-#assortment_ext = ["headscarf", "shawl",]
 
 assortment = ["T-shirt", "dress", "sweater", "shirt", "jacket", "skirt", "scarf", "backpack", "bodice", "hoodie",]
 
 assortment_s = ["T-shirts", "dresses", "sweaters", "shirts", "jackets", "skirts", "scarves", "backpacks", "bodices", "hoodies",]
+
+assortment_na = ["shawl", "pants", "hoodies", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",]
 
 sizes = ["size XS", "size S", "size M", "size L", "size XL", "size XXL",]
 
@@ -143,39 +157,28 @@ def generate_v2(samples: int) -> list:
 
 def items_to_turns(items: list[str]) -> list:
     turn_list = []
+    cntr = 0
     for item in items:
         if item.find("System: ") == 0 or item.find("User:") == 0:
             turn_list.append(item)
         if item.find("Assistant: ") == 0:
+            cntr += 1
             separator = item.find(":")
             assistant = item[:separator+1]
             utterance = item[separator+1:]
             turn_list.append(f"{assistant.strip()}\t{utterance.strip()}\t0")
-    return turn_list, 10
+    return turn_list, cntr
 
 
 def generate_v3(samples: int) -> list:
 
-    question_per_story = 5
+    question_per_story = 14
     story_count = int(samples / question_per_story)
 
     stories = []
     turn_stories = []
 
     for _ in range(story_count):
-
-        available_txt = [
-            "The following items are available:",
-            "Items in stock:",
-            "Available items:",
-            "Products range includes:",
-            "Products range:",
-            "Sales range includes:",
-            "Our assortment in stock includes:",
-            "Items currently in stock:",
-            "Our available assortment:",
-            "Products we have in stock:",
-            ]
 
         add_to_cart = [
             "You need to add all the items to your shopping cart.",
@@ -198,11 +201,18 @@ def generate_v3(samples: int) -> list:
         #     "Was there something we forgot to order?",
         # ]
 
-        p1 = random.randint(0, 1)
-        p2 = random.randint(2, 3)
-        p3 = random.randint(4, 5)   # to ask as missing item
-        p4 = random.randint(6, 7)
-        p5 = random.randint(8, 9)
+        # product available
+        pa1 = random.randint(0, 1)
+        pa2 = random.randint(2, 3)
+        pa3 = random.randint(4, 5)   # to ask as missing item
+        pa4 = random.randint(6, 7)
+        pa5 = random.randint(8, 9)
+
+        pna1 = 1 if pa1==0 else 0
+        pna2 = 3 if pa2==2 else 2
+        pna3 = 5 if pa3==4 else 4
+        pna4 = 7 if pa4==6 else 6
+        pna5 = 9 if pa5==8 else 8
 
         ask_avaliability = [
             "Can you check if it is in stock?",
@@ -214,23 +224,50 @@ def generate_v3(samples: int) -> list:
         interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
 
         items = []
-        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {assortment_s[p1]}, {assortment_s[p2]}, {assortment_s[p3]}, {assortment_s[p4]}, {assortment_s[p5]}")
+        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {assortment_s[pa1]}, {assortment_s[pa2]}, {assortment_s[pa3]}, {assortment_s[pa4]}, {assortment_s[pa5]}")
         items.append(f"Assistant: {random.choice(welcome_search)}")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[p5]}. {random.choice(ask_avaliability)}")
-        items.append(f"Assistant: Yes, it is available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[p1]}. {random.choice(ask_avaliability)}")
-        items.append(f"Assistant: Sure. Yes, it\'s available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[p4]}. {random.choice(ask_avaliability)}")
-        items.append(f"Assistant: Yes, it is available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[p3]}. {random.choice(ask_avaliability)}")
-        items.append(f"Assistant: Yes, it\'s available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[p2]}. {random.choice(ask_avaliability)}")
-        items.append(f"Assistant: Let me check. Yes, it is available.")
 
-        items.append(f"User: I am ready to buy all this.")
+        # 1
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pna5]}. {random.choice(ask_avaliability)}")
+        items.append(f"Is {assortment[pna5]} available?\tno\t1")
+        items.append(f"Assistant: No.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa5]}. {random.choice(ask_avaliability)}")
+        items.append(f"Is {assortment[pa5]} available?\tyes\t2")
+        items.append(f"Assistant: Yes.")
+        # 2
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pna1]}.")
+        items.append(f"Is {assortment[pna1]} available?\tno\t3")
+        items.append(f"Assistant: It\'s not available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa1]}.")
+        items.append(f"Is {assortment[pa1]} available?\tyes\t4")
+        items.append(f"Assistant: It\'s available.")
+        # 3
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pna4]}.")
+        items.append(f"Is {assortment[pna4]} available?\tno\t5")
+        items.append(f"Assistant: It is not available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa4]}. {random.choice(ask_avaliability)}")
+        items.append(f"Is {assortment[pa4]} available?\tyes\t6")
+        items.append(f"Assistant: Yes.")
+        # 4
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pna3]}. {random.choice(ask_avaliability)}")
+        items.append(f"Is {assortment[pna3]} available?\tno\t7")
+        items.append(f"Assistant: No.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa3]}.")
+        items.append(f"Is {assortment[pa3]} available?\tyes\t8")
+        items.append(f"Assistant: Yes, it\'s available.")
+        # 5
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pna2]}.")
+        items.append(f"Is {assortment[pna2]} available?\tno\t9")
+        items.append(f"Assistant: It is not available.")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa2]}.")
+        items.append(f"Is {assortment[pa2]} available?\tyes\t10")
+        items.append(f"Assistant: It is available.")
+
+
+        items.append(f"User: I am ready to buy all avaliable items.")
         items.append(f"Assistant: {random.choice(add_to_cart)}")
 
-        items.append(f"User: I have added the {assortment[p4]}, the {assortment[p1]}, the {assortment[p5]}, the {assortment[p2]} to the card.")
+        items.append(f"User: I have added the {assortment[pa4]}, the {assortment[pa1]}, the {assortment[pa5]}, the {assortment[pa2]} to the card.")
 
         about_forgot = [
             "It seems you forgot to add another item from the ones you wanted.",
@@ -241,7 +278,7 @@ def generate_v3(samples: int) -> list:
 
         items.append(f"Assistant: {random.choice(about_forgot)}")
 
-        items.append(f"{random.choice(ask_forgot_item)}\t{assortment[p3]}\t0")
+        items.append(f"{random.choice(ask_forgot_item)}\t{assortment[pa3]}\t11")
 
         #reaction_1 = ["Exactly, I forgot.", "Yes, I forgot.", ]
         #reaction_2 = ["Yes, I know.", "Yes, I'm aware."]
@@ -294,10 +331,10 @@ def generate_v3(samples: int) -> list:
         ]
 
         # try to understand the necessity to ask adding new item by answer
-        items.append(f"{random.choice(q_propose)}\t{turn}\t0")
+        #items.append(f"{random.choice(q_propose)}\t{turn}\t0")
 
         ###############################################################
-        items.append(f"{random.choice(question)}\t{assortment[p3]}\t0")
+        items.append(f"{random.choice(question)}\t{assortment[pa3]}\t12")
 
         q_confirm = [
             "Was the order confirmed for all these items",
@@ -305,7 +342,7 @@ def generate_v3(samples: int) -> list:
             "Has the order been confirmed for all these items",
             "Was the order placed for all following items",
         ]
-        items.append(f"{random.choice(q_confirm)}: the {assortment[p2]}, the {assortment[p3]}, the {assortment[p5]}, the {assortment[p1]}, the {assortment[p4]}?\t{turn}\t0")
+        items.append(f"{random.choice(q_confirm)}: the {assortment[pa2]}, the {assortment[pa3]}, the {assortment[pa5]}, the {assortment[pa1]}, the {assortment[pa4]}?\t{turn}\t13")
 
         q_confirm = [
             "Are all these items included in the list",
@@ -313,7 +350,7 @@ def generate_v3(samples: int) -> list:
             "Are all of these items in the list",
             "Does the order include all these list",
         ]
-        items.append(f"{random.choice(q_confirm)}: the {assortment[p1]}, the {assortment[p4]}, the {assortment[p2]}, the {assortment[p3]}?\t{turn}\t0")
+        items.append(f"{random.choice(q_confirm)}: the {assortment[pa1]}, the {assortment[pa4]}, the {assortment[pa2]}, the {assortment[pa3]}, the {assortment[pa5]}?\t{turn}\t14")
 
         ask_confirmation = [
             "Do you want to confirm the purchase?",
@@ -349,7 +386,7 @@ actions = [
 
 if __name__ == "__main__":
 
-    samples = 2000
+    samples = 1000
 
     if False:
 
@@ -380,4 +417,4 @@ if __name__ == "__main__":
         with open("datasets/qa23-shopping-turns_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
 
-    print(f"sampeles={samples}, {len(train_turns)}")
+    print(f"sampeles={samples}, {len(train_stories)}")
