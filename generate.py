@@ -51,13 +51,24 @@ assortment = ["T-shirt", "dress", "sweater", "shirt", "jacket", "skirt", "scarf"
 
 assortment_s = ["T-shirts", "dresses", "sweaters", "shirts", "jackets", "skirts", "scarves", "backpacks", "bodices", "hoodies",]
 
-assortment_na = ["shawl", "pants", "hoodies", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",]
+assortment_na = ["shawl", "pants", "cap", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",]
 
 assortment_rnd = assortment_na + [
     "apple", "box", "laptop", "lamp", "charger", "toy", "football", "TV-set", "phone", "spray", "deodorant", "server", "monitor",
     "display", "shoes", "tomato", "airplane", "cooler", "byke", "conditioner", "lighthouse", "airport", "spaceship", "redis", "fish",
     "chair", "passport", "scissors", "bear", "beer",
     "deer", "developer", "mirror", "tongue", "parking", "tea", "banana", "dog", "door", "penguin",
+
+    "Sofa", "Bed", "Pillow", "Blanket", "Mattress", "Wardrobe", "Drawer", "Shelf", "Cupboard", "Desk",
+
+    "Headphones", "Plate", "Bowl", "Cup", "Glass", "Mug", "Fork", "Knife", "Spoon", "Teapot",
+    "Pan", "Pot", "Frying-pan", "Kettle", "Oven", "Stove", "Microwave", "Fridge", "Freezer", "Dishwasher",
+
+    "Sink", "Soap", "Towel", "Toothbrush", "Toothpaste", "Comb", "Hairbrush", "Shampoo", "Razor", "Toilet-paper",
+    "Washing-machine", "Dryer", "Iron", "Ironing-board", "Vacuum-cleaner", "Broom", "Mop", "Bucket", "Dustpan", "Sponge",
+    "Needle", "Thread", "Tape", "Glue", "Pen", "Pencil", "Eraser", "Notebook", "Paper", "Book",
+    "Magazine", "Newspaper", "Bag", "Backpack", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers",
+    #"Socks", "Coat",
 ]
 
 sizes = ["size XS", "size S", "size M", "size L", "size XL", "size XXL",]
@@ -506,6 +517,76 @@ def generate_v4(samples: int) -> list:
     return stories, turn_stories
 
 
+def generate_v5(samples: int) -> list:
+
+    question_per_story = 4
+    story_count = int(samples / question_per_story)
+
+    stories = []
+    turn_stories = []
+
+    ask_availability = [
+        "Can you check if it is in stock?",
+        "Could you verify if it's available?",
+        "Can you see whether it's available?",
+        "Could you check the availability?",
+    ]
+
+    interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
+
+    all_assortment = assortment + assortment_rnd
+    print("gen assortment size:", len(all_assortment))
+
+    for _ in range(story_count):
+
+        # product id available
+        pa1 = random.randint(0, 1)
+        pa2 = random.randint(2, 3)
+        pa3 = random.randint(4, 5)
+        pa4 = random.randint(6, 7)
+        pa5 = random.randint(8, 9)
+
+        items = []
+        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {assortment_s[pa1]}, {assortment_s[pa2]}, {assortment_s[pa3]}, {assortment_s[pa4]}, {assortment_s[pa5]}")
+        items.append(f"Assistant: {random.choice(welcome_search)}")
+
+        ###################
+        product_id = random.randint(0, len(all_assortment)-1)
+        items.append(f"User: {all_assortment[product_id]}")
+
+        if product_id < len(assortment):
+            items.append(f"Is item: {all_assortment[product_id]} available?\tyes\t0")
+            items.append(f"Assistant: Item \"{all_assortment[product_id]}\" is available.")
+        else:
+            items.append(f"Is item: {all_assortment[product_id]} available?\tno\t0")
+            items.append(f"Assistant: Item \"{all_assortment[product_id]}\" is not available.")
+
+        items.append(f"Which product is the customer interested in?\t{all_assortment[product_id]}\t0")
+
+        ###################
+        product_id = random.randint(0, len(all_assortment)-1)
+        items.append(f"User: I{random.choice(interesting)} the {all_assortment[product_id]}. {random.choice(ask_availability)}")
+
+        if product_id < len(assortment):
+            items.append(f"Is item: {all_assortment[product_id]} available?\tyes\t0")
+            items.append(f"Assistant: Yes. You can buy it.")
+        else:
+            items.append(f"Is item: {all_assortment[product_id]} available?\tno\t0")
+            items.append(f"Assistant: No.")
+
+        items.append(f"Which product is the customer interested in?\t{all_assortment[product_id]}\t0")
+
+        ###################
+        items.append("User: Okay, then show me what is available.")
+        items.append(f"Assistant: Sure! We currently have {assortment_s[pa1]}, {assortment_s[pa2]}, {assortment_s[pa3]}, {assortment_s[pa4]}, {assortment_s[pa5]} in stock. Would you like to choose from these?")
+
+        stories.append(items_to_story(items))
+
+        turns = items_to_turns(items)
+        turn_stories.append(items_to_story(turns))
+
+    return stories, turn_stories
+
 
 actions = [
     "place an order",
@@ -551,16 +632,22 @@ if __name__ == "__main__":
             f.writelines(test_turns)
 
     if True:
-        samples = 2000
+        samples = 1000
 
-        train_stories, train_turns = generate_v4(samples)
+        train_stories, train_turns = generate_v5(samples)
 
         with open("datasets/qa24-shopping-available_train.txt", "w", encoding="utf-8") as f:
             f.writelines(train_stories)
 
-        test_stories, test_turns = generate_v4(samples)
+        with open("datasets/qa25-shopping-available_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_turns)
+
+        test_stories, test_turns = generate_v5(samples)
 
         with open("datasets/qa24-shopping-available_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_stories)
 
-    print(f"sampeles={samples}, {len(train_stories)}")
+        with open("datasets/qa25-shopping-available_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_turns)
+
+    print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
