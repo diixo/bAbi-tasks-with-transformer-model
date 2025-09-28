@@ -1,7 +1,7 @@
 import re
 
 def remove_punctuation_comma(text):
-    cleaned_text = re.sub(r"[^\w\s!,]", "", text)
+    cleaned_text = re.sub(r"[^\w\s!,-]", "", text)
     return cleaned_text
 
 
