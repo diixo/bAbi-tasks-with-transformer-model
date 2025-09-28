@@ -53,6 +53,13 @@ assortment_s = ["T-shirts", "dresses", "sweaters", "shirts", "jackets", "skirts"
 
 assortment_na = ["shawl", "pants", "hoodies", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",]
 
+assortment_rnd = assortment_na + [
+    "apple", "box", "laptop", "lamp", "charger", "toy", "football", "TV-set", "phone", "spray", "deodorant", "server", "monitor",
+    "display", "shoes", "tomato", "airplane", "cooler", "byke", "conditioner", "lighthouse", "airport", "spaceship", "redis", "fish",
+    "chair", "passport", "scissors", "bear", "beer",
+    "deer", "developer", "mirror", "tongue", "parking", "tea", "banana", "dog", "door", "penguin",
+]
+
 sizes = ["size XS", "size S", "size M", "size L", "size XL", "size XXL",]
 
 colors = ["red", "blue", "green", "white", "beige", "black", "yellow", "grey",]
@@ -212,7 +219,7 @@ def generate_v3(samples: int) -> list:
         # pna4 = 7 if pa4==6 else 6
         # pna5 = 9 if pa5==8 else 8
 
-        ask_avaliability = [
+        ask_availability = [
             "Can you check if it is in stock?",
             "Could you verify if it's available?",
             "Can you see whether it's available?",
@@ -231,18 +238,18 @@ def generate_v3(samples: int) -> list:
         items.append(f"Is {assortment[pa3]} available?\tyes\t0")
         items.append(f"Is {assortment[pa2]} available?\tyes\t0")
 
-        items.append(f"User: I{random.choice(interesting)} the {assortment[pa5]}. {random.choice(ask_avaliability)}")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa5]}. {random.choice(ask_availability)}")
         items.append(f"Assistant: Yes, it is available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[pa1]}. {random.choice(ask_avaliability)}")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa1]}. {random.choice(ask_availability)}")
         items.append(f"Assistant: Sure. Yes, it\'s available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[pa4]}. {random.choice(ask_avaliability)}")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa4]}. {random.choice(ask_availability)}")
         items.append(f"Assistant: Yes, it is available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[pa3]}. {random.choice(ask_avaliability)}")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa3]}. {random.choice(ask_availability)}")
         items.append(f"Assistant: Yes, it\'s available.")
-        items.append(f"User: I{random.choice(interesting)} the {assortment[pa2]}. {random.choice(ask_avaliability)}")
+        items.append(f"User: I{random.choice(interesting)} the {assortment[pa2]}. {random.choice(ask_availability)}")
         items.append(f"Assistant: Let me check. Yes, it is available.")
 
-        items.append(f"User: I am ready to buy all avaliable items.")
+        items.append(f"User: I am ready to buy all available items.")
         items.append(f"Assistant: {random.choice(add_to_cart)}")
 
         items.append(f"User: I have added the {assortment[pa4]}, the {assortment[pa1]}, the {assortment[pa5]}, the {assortment[pa2]} to the card.")
@@ -357,6 +364,149 @@ def generate_v3(samples: int) -> list:
     return stories, turn_stories
 
 
+def generate_v4(samples: int) -> list:
+
+    question_per_story = 10
+    story_count = int(samples / question_per_story)
+
+    stories = []
+    turn_stories = []
+
+    for _ in range(story_count):
+
+        # product available
+        pa1 = random.randint(0, 1)
+        pa2 = random.randint(2, 3)
+        pa3 = random.randint(4, 5)   # to ask as missing item
+        pa4 = random.randint(6, 7)
+        pa5 = random.randint(8, 9)
+
+        ask_availability = [
+            "Can you check if it is in stock?",
+            "Could you verify if it's available?",
+            "Can you see whether it's available?",
+            "Could you check the availability?",
+        ]
+
+        prod_selector = ["product", "item",]
+
+        interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
+
+        items = []
+        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {assortment_s[pa1]}, {assortment_s[pa2]}, {assortment_s[pa3]}, {assortment_s[pa4]}, {assortment_s[pa5]}")
+        items.append(f"Assistant: {random.choice(welcome_search)}")
+
+
+        # product = random.choice(assortment_rnd)
+        # items.append(f"User: {product}")
+        # items.append(f"Is {product} available?\tno\t0")
+        # items.append(f"Assistant: No, it is not available.")
+
+        if random.randint(0, 1) > 0:
+            product = assortment[pa5]
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tyes\t0")
+            items.append(f"Assistant: Yes, it is available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+        else:
+            product = random.choice(assortment_rnd)
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No, it is not available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+
+        if random.randint(0, 1) > 0:
+            product = assortment[pa1]
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tyes\t0")
+            items.append(f"Assistant: Sure. Yes, it\'s available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+        else:
+            product = random.choice(assortment_rnd)
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No, it is not available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+
+        if random.randint(0, 1) > 0:
+            product = assortment[pa4]
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tyes\t0")
+            items.append(f"Assistant: Yes, it is available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+        else:
+            product = random.choice(assortment_rnd)
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No, it is not available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+
+        product = assortment[pa2]
+        items.append(f"User: {product}")
+        items.append(f"Assistant: Yes, it is available.")
+
+        if random.randint(0, 1) > 0:
+            product = assortment[pa3]
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tyes\t0")
+            items.append(f"Assistant: Yes, it\'s available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+        else:
+            product = random.choice(assortment_rnd)
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No, it is not available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+
+        if random.randint(0, 1) > 1:
+            product = assortment[pa2]
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tyes\t0")
+            items.append(f"Assistant: Let me check. Yes, it is available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+        else:
+            product = random.choice(assortment_rnd)
+            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No, it is not available.")
+            items.append(f"Is {product} {random.choice(prod_selector)}?\tyes\t0")
+
+        items.append("User: order")
+
+        order_propose = [
+            "Should I make the order of available items for you?",
+            "Should I form the order of available items for you?",
+            "Should I create the order of available items for you?",
+            "Should I place the order of available items for you?",
+            "Do you want I make the order of available items for you?",
+            "Do you want I form the order of available items for you?",
+            "Do you want I create the order of available items for you?",
+            "Do you want I place the order of available items for you?",
+            ]
+
+        items.append(f"Assistant: {random.choice(order_propose)}")
+
+        if random.randint(0, 1) > 1:
+            items.append("User: yes")
+            items.append("Assistant: order was formed. I will send you a link for online payment and continue.")
+        else:
+            items.append("User: no")
+            items.append("Assistant: The \"order\" was skipped. I continue.")
+
+
+
+        items.append("User: " + random.choice(["yes", "no", "maybe", "any", "nope", "never", "ever", "always",]))
+        items.append("Assistant: please, specify the item you are interested in.")
+        stories.append(items_to_story(items))
+
+        # valid if only questions per for turns and simple story the same
+        turns = items_to_turns(items)
+        turn_stories.append(items_to_story(turns))
+
+    return stories, turn_stories
+
+
+
 actions = [
     "place an order",
     "confirm an order",
@@ -399,5 +549,18 @@ if __name__ == "__main__":
 
         with open("datasets/qa23-shopping-turns_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
+
+    if True:
+        samples = 2000
+
+        train_stories, train_turns = generate_v4(samples)
+
+        with open("datasets/qa24-shopping-available_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_stories)
+
+        test_stories, test_turns = generate_v4(samples)
+
+        with open("datasets/qa24-shopping-available_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_stories)
 
     print(f"sampeles={samples}, {len(train_stories)}")

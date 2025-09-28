@@ -29,6 +29,10 @@ paths = {
             "train": "datasets/qa23-shopping-turns_train.txt",
             "test": "datasets/qa23-shopping-turns_test.txt",
         },
+        "qa24": {
+            "train": "datasets/qa24-shopping-available_train.txt",
+            "test": "datasets/qa24-shopping-available_test.txt",
+        },
     },
 }
 
