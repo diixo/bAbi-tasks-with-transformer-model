@@ -537,6 +537,15 @@ def generate_v5(samples: int) -> list:
     all_assortment = assortment + assortment_rnd
     print("gen assortment size:", len(all_assortment))
 
+
+    another = [
+        "You can try looking for another product.",
+        "You may try searching for another item.",
+        "You could try to find a different product.",
+        "Perhaps you\'d like to look for another product?",
+    ]
+
+
     for _ in range(story_count):
 
         # product id available
@@ -552,29 +561,33 @@ def generate_v5(samples: int) -> list:
 
         ###################
         product_id = random.randint(0, len(all_assortment)-1)
-        items.append(f"User: {all_assortment[product_id]}")
+        product = all_assortment[product_id]
+
+        items.append(f"User: {product}")
+        items.append(f"{random.choice(welcome_search)}\t{product}\t0")
 
         if product_id < len(assortment):
-            items.append(f"Is item: {all_assortment[product_id]} available?\tyes\t0")
-            items.append(f"Assistant: \"{all_assortment[product_id]}\" is available.")
+            items.append(f"Is item: {product} available?\tyes\t0")
+            items.append(f"Assistant: \"{product}\" is available.")
         else:
-            items.append(f"Is item: {all_assortment[product_id]} available?\tno\t0")
-            items.append(f"Assistant: \"{all_assortment[product_id]}\" is not available.")
+            items.append(f"Is item: {product} available?\tno\t0")
+            items.append(f"Assistant: \"{product}\" is not available.")
 
-        items.append(f"Which product is the customer interested in?\t{all_assortment[product_id]}\t0")
+        items.append(f"Which product is the customer interested in?\t{product}\t0")
 
         ###################
         product_id = random.randint(0, len(all_assortment)-1)
-        items.append(f"User: I{random.choice(interesting)} the {all_assortment[product_id]}. {random.choice(ask_availability)}")
+        product = all_assortment[product_id]
+        items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
 
         if product_id < len(assortment):
-            items.append(f"Is item: {all_assortment[product_id]} available?\tyes\t0")
+            items.append(f"Is item: {product} available?\tyes\t0")
             items.append(f"Assistant: Yes. You can buy it.")
         else:
-            items.append(f"Is item: {all_assortment[product_id]} available?\tno\t0")
+            items.append(f"Is item: {product} available?\tno\t0")
             items.append(f"Assistant: No.")
 
-        items.append(f"Which product is the customer interested in?\t{all_assortment[product_id]}\t0")
+        items.append(f"Which product is the customer interested in?\t{product}\t0")
 
         ###################
         items.append("User: Okay, then show me what is available.")
@@ -613,7 +626,7 @@ if __name__ == "__main__":
 
         with open("datasets/qa21-shopping-dialogue_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_stories)
-    else:
+    if False:
 
         train_stories, train_turns = generate_v3(samples)
 
