@@ -556,10 +556,10 @@ def generate_v5(samples: int) -> list:
 
         if product_id < len(assortment):
             items.append(f"Is item: {all_assortment[product_id]} available?\tyes\t0")
-            items.append(f"Assistant: Item \"{all_assortment[product_id]}\" is available.")
+            items.append(f"Assistant: \"{all_assortment[product_id]}\" is available.")
         else:
             items.append(f"Is item: {all_assortment[product_id]} available?\tno\t0")
-            items.append(f"Assistant: Item \"{all_assortment[product_id]}\" is not available.")
+            items.append(f"Assistant: \"{all_assortment[product_id]}\" is not available.")
 
         items.append(f"Which product is the customer interested in?\t{all_assortment[product_id]}\t0")
 
