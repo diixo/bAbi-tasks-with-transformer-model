@@ -62,8 +62,8 @@ assortment_rnd = assortment_na + [
 
     # "Washing-machine", "Dryer", "Iron", "Ironing-board", "Vacuum-cleaner", "Broom", "Mop", "Bucket", "Dustpan", "Sponge",
     # "Needle", "Thread", "Tape", "Glue", "Pen", "Pencil", "Eraser", "Notebook", "Paper", "Book",
-    # "Magazine", "Newspaper", "Bag", "Backpack", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers",
-    #"Socks", "Coat",
+    # "Magazine", "Newspaper", "Bag", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers", "Coat",
+    # "Socks", 
 ]
 
 sizes = ["size XS", "size S", "size M", "size L", "size XL", "size XXL",]
@@ -160,10 +160,10 @@ def generate_v5(samples: int) -> list:
         if len(avail_ids) > 0:
             avail_txt = ", ".join([assortment_s[id] for id in avail_ids])
             items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {avail_txt}")
+            items.append(f"Assistant: Hi. I am online shopping Assistant. What product are you interested in?")
         else:
             items.append(f"System: You are online shopping {random.choice(roles)}.")
-
-        items.append(f"Assistant: Hi. I am online shopping Assistant. {random.choice(welcome_search)}")
+            items.append(f"Assistant: Hi. I am online shopping Assistant. {random.choice(welcome_search)}")
 
         ###################
 
@@ -171,8 +171,8 @@ def generate_v5(samples: int) -> list:
 
             pid_0 = random.randint(0, len(avail_ids)-2)
             pid_1 = pid_0 + 1
-            product_0 = assortment[pid_0]
-            product_1 = assortment[pid_1]
+            product_0 = assortment[avail_ids[pid_0]]
+            product_1 = assortment[avail_ids[pid_1]]
 
             if random.randint(0, 1) > 0:
                 items.append(f"User: {product_0}")
@@ -180,6 +180,8 @@ def generate_v5(samples: int) -> list:
 
                 items.append(f"Is item: {product_0} available?\tyes\t0")
                 items.append(f"Assistant: \"{product_0}\" is available.")
+
+                product = product_0
             else:
                 product = random.choice(assortment_rnd)
                 items.append(f"User: {product}")
@@ -187,8 +189,6 @@ def generate_v5(samples: int) -> list:
 
                 items.append(f"Is item: {product} available?\tno\t0")
                 items.append(f"Assistant: \"{product}\" is not available.")
-
-            #items.append(f"Which product is the customer interested in?\t{product}\t0")
 
             ###################
 
@@ -205,6 +205,8 @@ def generate_v5(samples: int) -> list:
 
                 items.append(f"Is item: {product} available?\tno\t0")
                 items.append(f"Assistant: No.")
+
+            items.append(f"Which product is the customer interested in?\t{product}\t0")
         else:
             product = random.choice(assortment_rnd)
             items.append(f"User: {product}")
@@ -221,7 +223,7 @@ def generate_v5(samples: int) -> list:
             items.append(f"Assistant: No.")
 
 
-        items.append(f"Which product is the customer interested in?\t{product}\t0")
+            items.append(f"Which product is the customer interested in?\t{product}\t0")
 
         ###################
         items.append("User: Okay, show me what is available.")
