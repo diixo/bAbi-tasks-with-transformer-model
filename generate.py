@@ -59,15 +59,16 @@ assortment_rnd = assortment_na + [
     "chair", "passport", "scissors", "bear", "beer",
     "deer", "developer", "mirror", "tongue", "parking", "tea", "banana", "dog", "door", "penguin",
 
-    "Sofa", "Bed", "Pillow", "Blanket", "Mattress", "Wardrobe", "Drawer", "Shelf", "Cupboard", "Desk",
+    # "Sofa", "Bed", "Pillow", "Blanket", "Mattress", "Wardrobe", "Drawer", "Shelf", "Cupboard", "Desk",
 
-    "Headphones", "Plate", "Bowl", "Cup", "Glass", "Mug", "Fork", "Knife", "Spoon", "Teapot",
-    "Pan", "Pot", "Frying-pan", "Kettle", "Oven", "Stove", "Microwave", "Fridge", "Freezer", "Dishwasher",
+    # "Headphones", "Plate", "Bowl", "Cup", "Glass", "Mug", "Fork", "Knife", "Spoon", "Teapot",
+    # "Pan", "Pot", "Frying-pan", "Kettle", "Oven", "Stove", "Microwave", "Fridge", "Freezer", "Dishwasher",
 
-    "Sink", "Soap", "Towel", "Toothbrush", "Toothpaste", "Comb", "Hairbrush", "Shampoo", "Razor", "Toilet-paper",
-    "Washing-machine", "Dryer", "Iron", "Ironing-board", "Vacuum-cleaner", "Broom", "Mop", "Bucket", "Dustpan", "Sponge",
-    "Needle", "Thread", "Tape", "Glue", "Pen", "Pencil", "Eraser", "Notebook", "Paper", "Book",
-    "Magazine", "Newspaper", "Bag", "Backpack", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers",
+    # "Sink", "Soap", "Towel", "Toothbrush", "Toothpaste", "Comb", "Hairbrush", "Shampoo", "Razor", "Toilet-paper",
+
+    # "Washing-machine", "Dryer", "Iron", "Ironing-board", "Vacuum-cleaner", "Broom", "Mop", "Bucket", "Dustpan", "Sponge",
+    # "Needle", "Thread", "Tape", "Glue", "Pen", "Pencil", "Eraser", "Notebook", "Paper", "Book",
+    # "Magazine", "Newspaper", "Bag", "Backpack", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers",
     #"Socks", "Coat",
 ]
 
@@ -573,7 +574,7 @@ def generate_v5(samples: int) -> list:
             items.append(f"Is item: {product} available?\tno\t0")
             items.append(f"Assistant: \"{product}\" is not available.")
 
-        items.append(f"Which product is the customer interested in?\t{product}\t0")
+        #items.append(f"Which product is the customer interested in?\t{product}\t0")
 
         ###################
         product_id = random.randint(0, len(all_assortment)-1)
