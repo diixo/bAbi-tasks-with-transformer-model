@@ -53,16 +53,16 @@ assortment_rnd = assortment_na + [
     "chair", "passport", "scissors", "bear", "beer",
     "deer", "developer", "mirror", "tongue", "parking", "tea", "banana", "dog", "door", "penguin",
 
-    # "Sofa", "Bed", "Pillow", "Blanket", "Mattress", "Wardrobe", "Drawer", "Shelf", "Cupboard", "Desk",
+    "Sofa", "Bed", "Pillow", "Blanket", "Mattress", "Wardrobe", "Drawer", "Shelf", "Cupboard", "Desk",
 
-    # "Headphones", "Plate", "Bowl", "Cup", "Glass", "Mug", "Fork", "Knife", "Spoon", "Teapot",
-    # "Pan", "Pot", "Frying-pan", "Kettle", "Oven", "Stove", "Microwave", "Fridge", "Freezer", "Dishwasher",
+    "Headphones", "Plate", "Bowl", "Cup", "Glass", "Mug", "Fork", "Knife", "Spoon", "Teapot",
+    "Pan", "Pot", "Frying-pan", "Kettle", "Oven", "Stove", "Microwave", "Fridge", "Freezer", "Dishwasher",
 
-    # "Sink", "Soap", "Towel", "Toothbrush", "Toothpaste", "Comb", "Hairbrush", "Shampoo", "Razor", "Toilet-paper",
+    "Sink", "Soap", "Towel", "Toothbrush", "Toothpaste", "Comb", "Hairbrush", "Shampoo", "Razor", "Toilet-paper",
 
-    # "Washing-machine", "Dryer", "Iron", "Ironing-board", "Vacuum-cleaner", "Broom", "Mop", "Bucket", "Dustpan", "Sponge",
-    # "Needle", "Thread", "Tape", "Glue", "Pen", "Pencil", "Eraser", "Notebook", "Paper", "Book",
-    # "Magazine", "Newspaper", "Bag", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers", "Coat",
+    "Washing-machine", "Dryer", "Iron", "Ironing-board", "Vacuum-cleaner", "Broom", "Mop", "Bucket", "Dustpan", "Sponge",
+    "Needle", "Thread", "Tape", "Glue", "Pen", "Pencil", "Eraser", "Notebook", "Paper", "Book",
+    "Magazine", "Newspaper", "Bag", "Wallet", "Purse", "Key", "Keychain", "Umbrella", "Slippers", "Coat",
     # "Socks", 
 ]
 
@@ -139,7 +139,7 @@ def generate_v5(samples: int) -> list:
     for _ in range(story_count):
         items = []
 
-        rnd_amount = random.randint(0, 5)
+        rnd_amount = random.randint(0, 2)
         avail_ids = []
         if rnd_amount == 0:
             avail_ids = avail_ids
@@ -147,12 +147,12 @@ def generate_v5(samples: int) -> list:
             avail_ids = [random.randint(0, 9),]
         if rnd_amount == 2:
             avail_ids = [random.randint(0, 4), random.randint(5, 9),]
-        if rnd_amount == 3:
-            avail_ids = [random.randint(0, 3), random.randint(4, 6), random.randint(7, 9),]
-        if rnd_amount == 4:
-            avail_ids = [random.randint(0, 2), random.randint(3, 5), random.randint(6, 7), random.randint(8, 9),]
-        if rnd_amount == 5:
-            avail_ids = [random.randint(0, 1), random.randint(2, 3), random.randint(4, 5), random.randint(6, 7), random.randint(8, 9),]
+        # if rnd_amount == 3:
+        #     avail_ids = [random.randint(0, 3), random.randint(4, 6), random.randint(7, 9),]
+        # if rnd_amount == 4:
+        #     avail_ids = [random.randint(0, 2), random.randint(3, 5), random.randint(6, 7), random.randint(8, 9),]
+        # if rnd_amount == 5:
+        #     avail_ids = [random.randint(0, 1), random.randint(2, 3), random.randint(4, 5), random.randint(6, 7), random.randint(8, 9),]
 
         # avail_set = set([ assortment[id] for id in avail_ids ])
         # avail_s_set = set([ assortment_s[id] for id in avail_ids ])
@@ -161,9 +161,11 @@ def generate_v5(samples: int) -> list:
             avail_txt = ", ".join([assortment_s[id] for id in avail_ids])
             items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {avail_txt}")
             items.append(f"Assistant: Hi. I am online shopping Assistant. What product are you interested in?")
+            items.append("Is the available items list empty?\tno\t0")
         else:
             items.append(f"System: You are online shopping {random.choice(roles)}.")
             items.append(f"Assistant: Hi. I am online shopping Assistant. {random.choice(welcome_search)}")
+            items.append("Is the available items list empty?\tyes\t0")
 
         ###################
 
@@ -176,63 +178,61 @@ def generate_v5(samples: int) -> list:
 
             if random.randint(0, 1) > 0:
                 items.append(f"User: {product_0}")
-                items.append(f"{random.choice(welcome_search)}\t{product_0}\t0")
-
-                items.append(f"Is item: {product_0} available?\tyes\t0")
-                items.append(f"Assistant: \"{product_0}\" is available.")
+                items.append(f"Is {product_0} available?\tyes\t0")
+                items.append(f"Assistant: Yes. It is available.")
 
                 product = product_0
             else:
                 product = random.choice(assortment_rnd)
                 items.append(f"User: {product}")
-                items.append(f"{random.choice(welcome_search)}\t{product}\t0")
-
-                items.append(f"Is item: {product} available?\tno\t0")
-                items.append(f"Assistant: \"{product}\" is not available.")
+                items.append(f"Is {product} available?\tno\t0")
+                items.append(f"Assistant: No.")
 
             ###################
 
             if random.randint(0, 1) > 0:
-                items.append(f"User: I{random.choice(interesting)} the {product_1}. {random.choice(ask_availability)}")
+                items.append(f"User: I{random.choice(interesting)} the {product_1}.")
 
-                items.append(f"Is item: {product_1} available?\tyes\t0")
-                items.append(f"Assistant: Yes. You can buy it.")
+                items.append(f"Is {product_1} available?\tyes\t0")
+                items.append(f"Assistant: Yes. It is available.")
 
                 product = product_1
             else:
                 product = random.choice(assortment_rnd)
-                items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+                items.append(f"User: I{random.choice(interesting)} the {product}.")
+                items.append(f"Is {product} available?\tno\t0")
+                items.append(f"Assistant: No. It is not available.")
 
-                items.append(f"Is item: {product} available?\tno\t0")
-                items.append(f"Assistant: No.")
-
-            items.append(f"Which product is the customer interested in?\t{product}\t0")
+            #items.append(f"Which product is the customer interested in?\t{product}\t0")
         else:
             product = random.choice(assortment_rnd)
             items.append(f"User: {product}")
-            items.append(f"{random.choice(welcome_search)}\t{product}\t0")
+            #items.append(f"{random.choice(welcome_search)}\t{product}\t0")
 
-            items.append(f"Is item: {product} available?\tno\t0")
-            items.append(f"Assistant: \"{product}\" is not available.")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No. It is not available.")
             #########################
 
             product = random.choice(assortment_rnd)
-            items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
+            items.append(f"User: I{random.choice(interesting)} the {product}.")
 
-            items.append(f"Is item: {product} available?\tno\t0")
-            items.append(f"Assistant: No.")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No. It is not available.")
 
-
-            items.append(f"Which product is the customer interested in?\t{product}\t0")
+            #items.append(f"Which product is the customer interested in?\t{product}\t0")
 
         ###################
         items.append("User: Okay, show me what is available.")
 
         if len(avail_ids) > 0:
+            items.append("Is the available items list empty?\tno\t0")
+
             avail_txt = ", ".join([assortment_s[id] for id in avail_ids])
-            items.append(f"Assistant: Sure! We currently have: {avail_txt} in stock. Would you like to choose from these?")
+            items.append(f"Assistant: Sure! Our available items list: {avail_txt}. Would you like to choose from these?")
         else:
-            items.append("Assistant: our available list is empty.")
+            items.append("Is the available items list empty?\tyes\t0")
+            items.append(f"Assistant: our available items list is empty.")
+
 
         stories.append(items_to_story(items))
 
