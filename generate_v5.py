@@ -1,19 +1,8 @@
 
 import random
 
-
 random.seed(random.randint(1, 2080))
 
-INPUT_TEMPLATE = """
-### Context:
-{context}
-
-### Question:
-{question}
-
-### Answer:
-{answer}
-"""
 
 available_txt = [
     "The following items are available:",
@@ -26,7 +15,7 @@ available_txt = [
     "Items currently in stock:",
     "Our available assortment:",
     "Products, that have in stock:",
-    ]
+]
 
 welcome_search = [
     "What product are you interested in?",
@@ -41,11 +30,11 @@ welcome_search = [
 roles = ["assistant", "Assistant",]
 
 
-assortment = ["T-shirt", "dress", "sweater", "shirt", "jacket", "skirt", "scarf", "backpack", "bodice", "hoodie",]
+assortment_na = ["shawl", "pants", "cap", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",]
 
 assortment_s = ["T-shirts", "dresses", "sweaters", "shirts", "jackets", "skirts", "scarves", "backpacks", "bodices", "hoodies",]
 
-assortment_na = ["shawl", "pants", "cap", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",]
+assortment = ["T-shirt", "dress", "sweater", "shirt", "jacket", "skirt", "scarf", "backpack", "bodice", "hoodie",]
 
 assortment_rnd = assortment_na + [
     "apple", "box", "laptop", "lamp", "charger", "toy", "football", "TV-set", "phone", "spray", "deodorant", "server", "monitor",
