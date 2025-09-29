@@ -154,20 +154,20 @@ def generate_v5(samples: int) -> list:
         if rnd_amount == 5:
             avail_ids = [random.randint(0, 1), random.randint(2, 3), random.randint(4, 5), random.randint(6, 7), random.randint(8, 9),]
 
-        avail_set = set([ assortment[id] for id in avail_ids ])
-        avail_s_set = set([ assortment_s[id] for id in avail_ids ])
+        # avail_set = set([ assortment[id] for id in avail_ids ])
+        # avail_s_set = set([ assortment_s[id] for id in avail_ids ])
 
-        if len(avail_s_set) > 0:
-            avail_txt = ", ".join(list(avail_s_set))
+        if len(avail_ids) > 0:
+            avail_txt = ", ".join([assortment_s[id] for id in avail_ids])
             items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {avail_txt}")
         else:
             items.append(f"System: You are online shopping {random.choice(roles)}.")
 
-        items.append(f"Assistant: {random.choice(welcome_search)}")
+        items.append(f"Assistant: Hi. I am online shopping Assistant. {random.choice(welcome_search)}")
 
         ###################
 
-        if len(avail_s_set) > 1:
+        if len(avail_ids) > 1:
 
             pid_0 = random.randint(0, len(avail_ids)-2)
             pid_1 = pid_0 + 1
@@ -213,6 +213,7 @@ def generate_v5(samples: int) -> list:
             items.append(f"Is item: {product} available?\tno\t0")
             items.append(f"Assistant: \"{product}\" is not available.")
             #########################
+
             product = random.choice(assortment_rnd)
             items.append(f"User: I{random.choice(interesting)} the {product}. {random.choice(ask_availability)}")
 
@@ -225,8 +226,8 @@ def generate_v5(samples: int) -> list:
         ###################
         items.append("User: Okay, show me what is available.")
 
-        if len(avail_s_set) > 0:
-            avail_txt = ", ".join(list(avail_s_set))
+        if len(avail_ids) > 0:
+            avail_txt = ", ".join([assortment_s[id] for id in avail_ids])
             items.append(f"Assistant: Sure! We currently have: {avail_txt} in stock. Would you like to choose from these?")
         else:
             items.append("Assistant: our available list is empty.")
@@ -248,7 +249,7 @@ if __name__ == "__main__":
     with open("datasets/qa24-shopping-available_train.txt", "w", encoding="utf-8") as f:
         f.writelines(train_stories)
 
-    with open("datasets/qa25-shopping-available_train.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa25-shopping-available-turns_train.txt", "w", encoding="utf-8") as f:
         f.writelines(train_turns)
 
     test_stories, test_turns = generate_v5(samples)
@@ -256,7 +257,7 @@ if __name__ == "__main__":
     with open("datasets/qa24-shopping-available_test.txt", "w", encoding="utf-8") as f:
         f.writelines(test_stories)
 
-    with open("datasets/qa25-shopping-available_test.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa25-shopping-available-turns_test.txt", "w", encoding="utf-8") as f:
         f.writelines(test_turns)
 
     print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
