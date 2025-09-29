@@ -176,12 +176,10 @@ def generate_v5(samples: int) -> list:
             product_0 = assortment[avail_ids[pid_0]]
             product_1 = assortment[avail_ids[pid_1]]
 
-            if random.randint(0, 1) > 0:
+            if random.choice([0, 1]) > 0:
                 items.append(f"User: {product_0}")
                 items.append(f"Is {product_0} available?\tyes\t0")
                 items.append(f"Assistant: Yes. It is available.")
-
-                product = product_0
             else:
                 product = random.choice(assortment_rnd)
                 items.append(f"User: {product}")
@@ -190,20 +188,33 @@ def generate_v5(samples: int) -> list:
 
             ###################
 
-            if random.randint(0, 1) > 0:
+            if random.choice([0, 1]) < 1:
                 items.append(f"User: I{random.choice(interesting)} the {product_1}.")
-
                 items.append(f"Is {product_1} available?\tyes\t0")
                 items.append(f"Assistant: Yes. It is available.")
-
-                product = product_1
             else:
                 product = random.choice(assortment_rnd)
                 items.append(f"User: I{random.choice(interesting)} the {product}.")
                 items.append(f"Is {product} available?\tno\t0")
                 items.append(f"Assistant: No. It is not available.")
 
-            #items.append(f"Which product is the customer interested in?\t{product}\t0")
+        elif len(avail_ids) == 1:
+
+            pid = random.randint(0, len(avail_ids)-1)
+
+            product = assortment[avail_ids[pid]]
+
+            items.append(f"User: {product}")
+            items.append(f"Is {product} available?\tyes\t0")
+            items.append(f"Assistant: Yes. It is available.")
+
+            ###################
+
+            product = random.choice(assortment_rnd)
+            items.append(f"User: I{random.choice(interesting)} the {product}.")
+            items.append(f"Is {product} available?\tno\t0")
+            items.append(f"Assistant: No. It is not available.")
+
         else:
             product = random.choice(assortment_rnd)
             items.append(f"User: {product}")
@@ -218,8 +229,6 @@ def generate_v5(samples: int) -> list:
 
             items.append(f"Is {product} available?\tno\t0")
             items.append(f"Assistant: No. It is not available.")
-
-            #items.append(f"Which product is the customer interested in?\t{product}\t0")
 
         ###################
         items.append("User: Okay, show me what is available.")

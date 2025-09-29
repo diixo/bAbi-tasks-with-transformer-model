@@ -15,9 +15,9 @@ def create_test_args() -> list:
     return [
         "trainer.py",
         "gpt2",
-        "-task_number", "23",
+        "-task_number", "25",
         "-lr", "1e-4",  # do not increase
-        "-epoch", "1",
+        "-epoch", "2",
         "-batch_size", "8",
     ]
 
@@ -64,8 +64,23 @@ def make_dataset(task_number=0):
             ]
         )
     else:
-        train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_number}") ])
-        test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_number}") ])
+
+        # train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_number}") ])
+        # test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_number}") ])
+
+        train_ds = ConcatDataset(
+            [
+                BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id}")
+                for task_id in range(24, task_number+1)
+            ]
+        )
+        test_ds = ConcatDataset(
+            [
+                BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id}")
+                for task_id in range(24, task_number+1)
+            ]
+        )
+
     return train_ds, test_ds
 
 
