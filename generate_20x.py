@@ -87,6 +87,76 @@ def items_to_turns(items: list[str]) -> list:
     return turn_list
 
 
+def generate_v5(samples: int) -> list:
+
+    question_per_story = 10
+    story_count = int(samples / question_per_story)
+
+    stories = []
+    turn_stories = []
+
+    interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
+
+    for _ in range(story_count):
+        items = []
+        full_size = 5
+        a_set = set([ random.choice(sublist) for sublist in assortment[:full_size] ])
+        na_set = list(a_set ^ set(flat))
+
+        mix_set = set(list(a_set)[1: random.randint(2, full_size)])
+        # list of interested items
+        interested_txt = ", ".join([product for product in mix_set])
+
+        avail_txt = ", ".join([product for product in a_set])
+
+        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {avail_txt}")
+        items.append(f"Assistant: Hi. I am online shopping Assistant. What product are you interested in?")
+
+        while len(mix_set) < 9:
+            mix_set.add(random.choice(na_set))
+            if len(mix_set)==9:
+                break
+        mix_set = list(mix_set)
+        random.shuffle(mix_set)
+
+        for id, product in enumerate(mix_set):
+            # available
+            if product in a_set:
+                if id % 2 == 0:
+                    items.append(f"User: {product}. {random.choice(ask_availability)}")
+                    items.append(f"Is {product} available?\tyes\t0")
+                    items.append(f"Assistant: Yes.")
+                else:
+                    items.append(f"User: I{random.choice(interesting)} the {product}.")
+                    items.append(f"Is {product} available?\tyes\t0")
+                    items.append(f"Assistant: Yes.")
+                    #items.append(f"Assistant: Yes. It is available.")
+            else:   # not available
+                if id % 2 == 0:
+                    items.append(f"User: {product}. {random.choice(ask_availability)}")
+                    items.append(f"Is {product} available?\tno\t0")
+                    items.append(f"Assistant: No.")
+                else:
+                    items.append(f"User: I{random.choice(interesting)} the {product}.")
+                    items.append(f"Is {product} available?\tno\t0")
+                    items.append(f"Assistant: No.")
+                    #items.append(f"Assistant: No. It is not available.")
+
+        ###################
+        items.append("User: order")
+
+        items.append(f"Assistant: Do you want I create the order from your interested list of available items?")
+        items.append(f"interested list of available items:\t{interested_txt}\t0")
+
+        stories.append(items_to_story(items))
+
+        turns = items_to_turns(items)
+        turn_stories.append(items_to_story(turns))
+
+    return stories, turn_stories
+
+
+
 def generate_v6(samples: int) -> list:
 
     question_per_story = 10
@@ -169,6 +239,8 @@ def generate_v6(samples: int) -> list:
 if __name__ == "__main__":
 
     samples = 1000
+
+    generate_v5(samples)
 
     train_stories, train_turns = generate_v6(samples)
 
