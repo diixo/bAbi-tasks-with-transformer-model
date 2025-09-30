@@ -103,7 +103,7 @@ def generate_v5(samples: int) -> list:
         a_set = set([ random.choice(sublist) for sublist in assortment[:full_size] ])
         na_set = list(a_set ^ set(flat))
 
-        mix_set = set(list(a_set)[1: random.randint(2, full_size)])
+        mix_set = set(list(a_set)[1: random.randint(2, full_size-1)])
         # list of interested items
         interested_txt = ", ".join([product for product in mix_set])
 
@@ -130,7 +130,6 @@ def generate_v5(samples: int) -> list:
                     items.append(f"User: I{random.choice(interesting)} the {product}.")
                     items.append(f"Is {product} available?\tyes\t0")
                     items.append(f"Assistant: Yes.")
-                    #items.append(f"Assistant: Yes. It is available.")
             else:   # not available
                 if id % 2 == 0:
                     items.append(f"User: {product}. {random.choice(ask_availability)}")
@@ -140,13 +139,13 @@ def generate_v5(samples: int) -> list:
                     items.append(f"User: I{random.choice(interesting)} the {product}.")
                     items.append(f"Is {product} available?\tno\t0")
                     items.append(f"Assistant: No.")
-                    #items.append(f"Assistant: No. It is not available.")
 
         ###################
-        items.append("User: order")
+        items.append("User: create order")
 
-        items.append(f"Assistant: Do you want I create the order from your interested list of available items?")
-        items.append(f"interested list of available items:\t{interested_txt}\t0")
+        #items.append(f"Assistant: Do you want I create the order from your interested list of available items?")
+        items.append(f"order of all available interested items:\t{interested_txt}\t0")
+        #items.append("Assistant: All available interested items was added to card of order. I will send you a link for online payment.")
 
         stories.append(items_to_story(items))
 
@@ -240,22 +239,41 @@ if __name__ == "__main__":
 
     samples = 1000
 
-    generate_v5(samples)
+    if True:
 
-    train_stories, train_turns = generate_v6(samples)
+        train_stories, train_turns = generate_v5(samples)
 
-    with open("datasets/qa26-shopping-available_train.txt", "w", encoding="utf-8") as f:
-        f.writelines(train_stories)
+        with open("datasets/qa24-shopping-interested_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_stories)
 
-    with open("datasets/qa27-shopping-available-turns_train.txt", "w", encoding="utf-8") as f:
-        f.writelines(train_turns)
+        with open("datasets/qa25-shopping-interested_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_turns)
 
-    test_stories, test_turns = generate_v6(samples)
+        test_stories, test_turns = generate_v5(samples)
 
-    with open("datasets/qa26-shopping-available_test.txt", "w", encoding="utf-8") as f:
-        f.writelines(test_stories)
+        with open("datasets/qa24-shopping-interested_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_stories)
 
-    with open("datasets/qa27-shopping-available-turns_test.txt", "w", encoding="utf-8") as f:
-        f.writelines(test_turns)
+        with open("datasets/qa25-shopping-interested_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_turns)
+
+
+    if True:
+
+        train_stories, train_turns = generate_v6(samples)
+
+        with open("datasets/qa26-shopping-available_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_stories)
+
+        with open("datasets/qa27-shopping-available-turns_train.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_turns)
+
+        test_stories, test_turns = generate_v5(samples)
+
+        with open("datasets/qa26-shopping-available_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_stories)
+
+        with open("datasets/qa27-shopping-available-turns_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_turns)
 
     print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
