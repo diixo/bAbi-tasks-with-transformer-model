@@ -562,23 +562,4 @@ if __name__ == "__main__":
         with open("datasets/qa23-shopping-turns_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
 
-    if True:
-        samples = 1000
-
-        train_stories, train_turns = generate_v5(samples)
-
-        with open("datasets/qa24-shopping-available_train.txt", "w", encoding="utf-8") as f:
-            f.writelines(train_stories)
-
-        with open("datasets/qa25-shopping-available_train.txt", "w", encoding="utf-8") as f:
-            f.writelines(train_turns)
-
-        test_stories, test_turns = generate_v5(samples)
-
-        with open("datasets/qa24-shopping-available_test.txt", "w", encoding="utf-8") as f:
-            f.writelines(test_stories)
-
-        with open("datasets/qa25-shopping-available_test.txt", "w", encoding="utf-8") as f:
-            f.writelines(test_turns)
-
-    print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+    #print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
