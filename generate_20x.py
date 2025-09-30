@@ -73,7 +73,7 @@ def items_to_turns(items: list[str]) -> list:
 
 def generate_v6(samples: int) -> list:
 
-    question_per_story = 4
+    question_per_story = 10
     story_count = int(samples / question_per_story)
 
     stories = []
@@ -91,14 +91,14 @@ def generate_v6(samples: int) -> list:
     for _ in range(story_count):
         items = []
 
-        rnd_size = random.randint(0, 5)
+        rnd_size = random.randint(0, 3)
 
-        a_set = [ random.choice(sublist) for sublist in assortment[:rnd_size] ]
-        na_set = set(a_set) ^ set(flat)
-        na_set = list(na_set)
+        a_set = set([ random.choice(sublist) for sublist in assortment[:rnd_size] ])
+        na_set = list(a_set ^ set(flat))
+        mix_set = set(a_set)
 
         if rnd_size > 0:
-            avail_txt = ", ".join([item for item in a_set])
+            avail_txt = ", ".join([product for product in a_set])
             items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {avail_txt}")
             items.append(f"Assistant: Hi. I am online shopping Assistant. What product are you interested in?")
             items.append("Is the available items list empty?\tno\t0")
@@ -106,6 +106,48 @@ def generate_v6(samples: int) -> list:
             items.append(f"System: You are online shopping {random.choice(roles)}.")
             items.append(f"Assistant: Hi. I am online shopping Assistant. {random.choice(welcome_search)}")
             items.append("Is the available items list empty?\tyes\t0")
+
+        while len(mix_set) < 8:
+            mix_set.add(random.choice(na_set))
+            if len(mix_set)==8:
+                break
+        mix_set = list(mix_set)
+        random.shuffle(mix_set)
+
+        for id, product in enumerate(mix_set):
+            # available
+            if product in a_set:
+                if id % 2 == 0:
+                    items.append(f"User: {product}")
+                    items.append(f"Is {product} available?\tyes\t0")
+                    items.append(f"Assistant: Yes. It is available.")
+                else:
+                    items.append(f"User: I{random.choice(interesting)} the {product}.")
+                    items.append(f"Is {product} available?\tyes\t0")
+                    items.append(f"Assistant: Yes.")
+                    #items.append(f"Assistant: Yes. It is available.")
+            else:   # not available
+                if id % 2 == 0:
+                    items.append(f"User: {product}")
+                    items.append(f"Is {product} available?\tno\t0")
+                    items.append(f"Assistant: No. It is not available.")
+                else:
+                    items.append(f"User: I{random.choice(interesting)} the {product}.")
+                    items.append(f"Is {product} available?\tno\t0")
+                    items.append(f"Assistant: No.")
+                    #items.append(f"Assistant: No. It is not available.")
+
+        ###################
+        items.append("User: Okay, show me what is available.")
+
+        if len(a_set) > 0:
+            items.append("Is the available items list empty?\tno\t0")
+
+            avail_txt = ", ".join([product for product in a_set])
+            items.append(f"Assistant: Sure! Our available items list: {avail_txt}. Would you like to choose from these?")
+        else:
+            items.append("Is the available items list empty?\tyes\t0")
+            items.append(f"Assistant: our available items list is empty.")
 
         stories.append(items_to_story(items))
 
@@ -121,18 +163,18 @@ if __name__ == "__main__":
 
     train_stories, train_turns = generate_v6(samples)
 
-    # with open("datasets/qa24-shopping-available_train.txt", "w", encoding="utf-8") as f:
-    #     f.writelines(train_stories)
+    with open("datasets/qa26-shopping-available_train.txt", "w", encoding="utf-8") as f:
+        f.writelines(train_stories)
 
-    # with open("datasets/qa25-shopping-available-turns_train.txt", "w", encoding="utf-8") as f:
-    #     f.writelines(train_turns)
+    with open("datasets/qa27-shopping-available-turns_train.txt", "w", encoding="utf-8") as f:
+        f.writelines(train_turns)
 
-    # test_stories, test_turns = generate_v6(samples)
+    test_stories, test_turns = generate_v6(samples)
 
-    # with open("datasets/qa24-shopping-available_test.txt", "w", encoding="utf-8") as f:
-    #     f.writelines(test_stories)
+    with open("datasets/qa26-shopping-available_test.txt", "w", encoding="utf-8") as f:
+        f.writelines(test_stories)
 
-    # with open("datasets/qa25-shopping-available-turns_test.txt", "w", encoding="utf-8") as f:
-    #     f.writelines(test_turns)
+    with open("datasets/qa27-shopping-available-turns_test.txt", "w", encoding="utf-8") as f:
+        f.writelines(test_turns)
 
-    # print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+    print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
