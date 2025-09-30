@@ -1,14 +1,14 @@
 import evaluate
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from data import BabiqaDataset
-from utils import parse_answer
+from utils import parse_answer, str_tokenize_words
 import sys
 import torch
 import pandas as pd
 import os
 
 
-task_no = "qa22"
+task_no = "qa26"
 
 #model_dir = sys.argv[-1]
 model_dir = "gpt2-babi"
@@ -47,11 +47,11 @@ if __name__ == "__main__":
         output_text = tokenizer.decode(gen_ids, skip_special_tokens=True)
 
         pred = 0
-        pred_words = set(
-            parse_answer(output_text, eos_token=tokenizer.eos_token).split()
+        pred_words = set(str_tokenize_words(
+            parse_answer(output_text, eos_token=tokenizer.eos_token))
         )
 
-        answers = set(raw_data["answer"].split())
+        answers = set(str_tokenize_words(raw_data["answer"]))
         if len(pred_words.intersection(answers)) == len(answers):
             pred = 1
 
