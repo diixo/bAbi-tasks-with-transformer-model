@@ -5,6 +5,21 @@ random.seed(random.randint(1, 2080))
 
 roles = ["assistant", "Assistant",]
 
+ask_availability = [
+    "Can you check if it is in stock?",
+    "Could you verify if it's available?",
+    "Can you see whether it's available?",
+    "Could you check the availability?",
+]
+
+propose_another_product = [
+    "You can try looking for another product.",
+    "You may try searching for another item.",
+    "You could try to find a different product.",
+    "Perhaps you\'d like to look for another product?",
+]
+
+
 available_txt = [
     "The following items are available:",
     "Items in stock:",
@@ -29,24 +44,25 @@ welcome_search = [
 ]
 
 assortment = [
+# 1
     ["T-shirt", "dress", "sweater", "shirt", "jacket", "skirt", "scarf", "backpack", "bodice", "hoodie",],
-
+# 2
     ["box", "laptop", "lamp", "charger", "toy", "football", "TV-set", "phone", "spray", "deodorant",],
-
+# 3
     ["sofa", "bed", "pillow", "blanket", "mattress", "wardrobe", "drawer", "shelf", "cupboard", "desk",],
-
+# 4
     ["headphones", "plate", "bowl", "cup", "glass", "mug", "fork", "knife", "spoon", "teapot",],
-
+# 5
     ["pan", "pot", "frying-pan", "kettle", "oven", "stove", "microwave", "fridge", "freezer", "dishwasher",],
-
+# 6
     ["sink", "soap", "towel", "toothbrush", "toothpaste", "comb", "hairbrush", "shampoo", "razor", "toilet-paper",],
-
+# 7
     ["washing-machine", "dryer", "iron", "ironing-board", "vacuum-cleaner", "broom", "mop", "bucket", "dustpan", "sponge",],
-
+# 8
     ["needle", "thread", "tape", "glue", "pen", "pencil", "eraser", "notebook", "paper", "book",],
-
+# 9
     ["magazine", "newspaper", "bag", "wallet", "purse", "key", "keychain", "umbrella", "slippers", "coat",],
-
+# 11
     ["shawl", "pants", "cap", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",],
 ]
 
@@ -79,21 +95,7 @@ def generate_v6(samples: int) -> list:
     stories = []
     turn_stories = []
 
-    ask_availability = [
-        "Can you check if it is in stock?",
-        "Could you verify if it's available?",
-        "Can you see whether it's available?",
-        "Could you check the availability?",
-    ]
-
     interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
-
-    propose_another_product = [
-        "You can try looking for another product.",
-        "You may try searching for another item.",
-        "You could try to find a different product.",
-        "Perhaps you\'d like to look for another product?",
-    ]
 
     for _ in range(story_count):
         items = []
@@ -145,7 +147,7 @@ def generate_v6(samples: int) -> list:
                     #items.append(f"Assistant: No. It is not available.")
 
         ###################
-        items.append("User: Okay, show me what is available.")
+        items.append("User: Okay, show me full available items list.")
 
         if len(a_set) > 0:
             items.append("Is the available items list empty?\tno\t0")
