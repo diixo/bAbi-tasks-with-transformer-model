@@ -88,6 +88,13 @@ def generate_v6(samples: int) -> list:
 
     interesting = [ "\'ll take", " will purchase", " have to buy", "\'m interested in" ]
 
+    propose_another_product = [
+        "You can try looking for another product.",
+        "You may try searching for another item.",
+        "You could try to find a different product.",
+        "Perhaps you\'d like to look for another product?",
+    ]
+
     for _ in range(story_count):
         items = []
 
