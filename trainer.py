@@ -15,10 +15,11 @@ def create_test_args() -> list:
     return [
         "trainer.py",
         "gpt2",
-        "-task_number", "25",
+        "-task_number", "26",
         "-lr", "1e-4",  # do not increase
-        "-epoch", "2",
+        "-epoch", "1",
         "-batch_size", "8",
+        #"-grouping", "True",
     ]
 
 
@@ -29,6 +30,7 @@ parser.add_argument('-lr', default=3e-4, type=float)
 parser.add_argument('-batch_size', default=6, type=int)
 parser.add_argument('-epoch', default=3, type=int)
 parser.add_argument('-ga', '--gradient_accumulation', default=1, type=int)
+parser.add_argument('-grouping', default=False, type=bool)
 
 
 class Trainer(DefaultTrainer):
@@ -46,7 +48,7 @@ class Trainer(DefaultTrainer):
         return self.lr_scheduler
 
 
-def make_dataset(task_number=0):
+def make_dataset(task_number, grouping=False):
     if task_number <= 0:
         if task_number < 0:
             task_number = abs(task_number)
@@ -64,22 +66,22 @@ def make_dataset(task_number=0):
             ]
         )
     else:
-
-        # train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_number}") ])
-        # test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_number}") ])
-
-        train_ds = ConcatDataset(
-            [
-                BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id}")
-                for task_id in range(24, task_number+1)
-            ]
-        )
-        test_ds = ConcatDataset(
-            [
-                BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id}")
-                for task_id in range(24, task_number+1)
-            ]
-        )
+        if grouping:
+            train_ds = ConcatDataset(
+                [
+                    BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id}")
+                    for task_id in range(26, task_number+1)
+                ]
+            )
+            test_ds = ConcatDataset(
+                [
+                    BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id}")
+                    for task_id in range(26, task_number+1)
+                ]
+            )
+        else:
+            train_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_number}") ])
+            test_ds = ConcatDataset([ BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_number}") ])
 
     return train_ds, test_ds
 
@@ -92,7 +94,7 @@ if __name__ == "__main__":
     model = AutoModelForCausalLM.from_pretrained(args.model_name)
     model.to(device)
 
-    train_dataset, test_dataset = make_dataset(args.task_number)
+    train_dataset, test_dataset = make_dataset(args.task_number, args.grouping)
 
     training_args = TrainingArguments(
         output_dir=model_dir,
