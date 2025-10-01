@@ -8,7 +8,7 @@ import pandas as pd
 import os
 
 
-task_no = "qa26"
+task_no = "qa22"
 
 #model_dir = sys.argv[-1]
 model_dir = "gpt2-babi"

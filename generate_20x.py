@@ -62,8 +62,10 @@ assortment = [
     ["needle", "thread", "tape", "glue", "pen", "pencil", "eraser", "notebook", "paper", "book",],
 # 9
     ["magazine", "newspaper", "bag", "wallet", "purse", "key", "keychain", "umbrella", "slippers", "coat",],
-# 11
+# 10
     ["shawl", "pants", "cap", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",],
+# 11
+    ["hanger", "blender", "audio-speakers", "keyboard", "tablet-pc", "monitor", "pantyhose", "curtains", "blinds", "sandals",]
 ]
 
 flat = [item for array in assortment for item in array]
@@ -155,6 +157,76 @@ def generate_v5(samples: int) -> list:
     return stories, turn_stories
 
 
+def generate_v4(samples: int) -> list:
+
+    question_per_story = 10
+    story_count = int(samples / question_per_story)
+
+    stories = []
+    turn_stories = []
+
+    for _ in range(story_count):
+        items = []
+        full_size = 5
+        a_set = set([ random.choice(sublist) for sublist in assortment[:full_size] ])
+        na_set = list(a_set ^ set(flat))
+
+        mix_set = set(list(a_set)[0: random.randint(3, full_size-1)])
+        not_interest = a_set ^ mix_set
+
+        # list of interested items
+        interested_txt = ", ".join([product for product in mix_set])
+
+        avail_txt = ", ".join([product for product in a_set])
+
+        items.append(f"System: You are online shopping {random.choice(roles)}. {random.choice(available_txt)} {avail_txt}")
+        items.append(f"Assistant: Hi. I am online shopping Assistant. What product are you interested in?")
+
+        while len(mix_set) < 8:
+            mix_set.add(random.choice(na_set))
+            if len(mix_set)==8:
+                break
+        mix_set = list(mix_set)
+        random.shuffle(mix_set)
+
+        for id, product in enumerate(mix_set):
+            # available
+            if product in a_set:
+                if id % 2 == 0:
+                    items.append(f"User: interested in {product}.")
+                    items.append(f"Is {product} available?\tyes\t0")
+                    items.append(f"Assistant: Yes.")
+                else:
+                    items.append(f"User: interested in {product}.")
+                    items.append(f"Is {product} available?\tyes\t0")
+                    items.append(f"Assistant: Yes.")
+            else:   # not available
+                if id % 2 == 0:
+                    items.append(f"User: interested in {product}.")
+                    items.append(f"Is {product} available?\tno\t0")
+                    items.append(f"Assistant: No.")
+                else:
+                    items.append(f"User: interested in {product}.")
+                    items.append(f"Is {product} available?\tno\t0")
+                    items.append(f"Assistant: No.")
+
+        ###################
+        items.append(f"interested available items:\t{interested_txt}\t0")
+
+        not_interest_txt = ", ".join([item for item in not_interest])
+        items.append(f"not interested available items:\t{not_interest_txt}\t0")
+
+        items.append("User: create order")
+        #items.append(f"Assistant: Do you want I create the order from your interested list of available items?")
+
+        items.append("Assistant: All interested available items was added to card of order. I will send you a link for online payment.")
+
+        stories.append(items_to_story(items))
+
+        turns = items_to_turns(items)
+        turn_stories.append(items_to_story(turns))
+    return stories, turn_stories
+
 
 def generate_v6(samples: int) -> list:
 
@@ -237,28 +309,59 @@ def generate_v6(samples: int) -> list:
 
 if __name__ == "__main__":
 
-    samples = 1000
+    if False:
 
-    if True:
+        samples = 1000
 
         train_stories, train_turns = generate_v5(samples)
 
         with open("datasets/qa24-shopping-interested_train.txt", "w", encoding="utf-8") as f:
             f.writelines(train_stories)
 
-        with open("datasets/qa25-shopping-interested_train.txt", "w", encoding="utf-8") as f:
+        with open("datasets/qa25-shopping-interested-turns_train.txt", "w", encoding="utf-8") as f:
             f.writelines(train_turns)
+
+        print(f"Train: sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+
 
         test_stories, test_turns = generate_v5(samples)
 
         with open("datasets/qa24-shopping-interested_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_stories)
 
-        with open("datasets/qa25-shopping-interested_test.txt", "w", encoding="utf-8") as f:
+        with open("datasets/qa25-shopping-interested-turns_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
 
+        print(f"Test: sampeles={samples}, test_stories={len(train_stories)}, test_turns={len(train_turns)} ")
 
     if True:
+
+        samples = 2000
+
+        train_stories, train_turns = generate_v4(samples)
+
+        with open("datasets/qa22-shopping-interested_train-2k.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_stories)
+
+        with open("datasets/qa23-shopping-interested-turns_train-2k.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_turns)
+
+        print(f"Train: sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+
+
+        test_stories, test_turns = generate_v4(samples)
+
+        with open("datasets/qa22-shopping-interested_test-2k.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_stories)
+
+        with open("datasets/qa23-shopping-interested-turns_test-2k.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_turns)
+
+        print(f"Test: sampeles={samples}, test_stories={len(test_stories)}, test_turns={len(test_turns)} ")
+
+    if False:
+
+        samples = 1000
 
         train_stories, train_turns = generate_v6(samples)
 
@@ -276,4 +379,4 @@ if __name__ == "__main__":
         with open("datasets/qa27-shopping-available-turns_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
 
-    print(f"sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+

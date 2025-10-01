@@ -22,28 +22,20 @@ paths = {
             "test": "datasets/qa21-shopping-dialogue_test.txt",
         },
         "qa22": {
-            "train": "datasets/qa22-shopping-items_train.txt",
-            "test": "datasets/qa22-shopping-items_test.txt",
+            "train": "datasets/qa22-shopping-interested_train-2k.txt",
+            "test": "datasets/qa22-shopping-interested_test-2k.txt",
         },
-        "qa23": {
-            "train": "datasets/qa23-shopping-turns_train.txt",
-            "test": "datasets/qa23-shopping-turns_test.txt",
+        "qa23": {   # turns
+            "train": "datasets/qa23-shopping-interested-turns_train-2k.txt",
+            "test": "datasets/qa23-shopping-interested-turns_test-2k.txt",
         },
         "qa24": {
-            "train": "datasets/qa24-shopping-available_train.txt",
-            "test": "datasets/qa24-shopping-available_test.txt",
+            "train": "datasets/qa24-shopping-interested_train.txt",
+            "test": "datasets/qa24-shopping-interested_test.txt",
         },
         "qa25": {   # turns
-            "train": "datasets/qa25-shopping-available-turns_train.txt",
-            "test": "datasets/qa25-shopping-available-turns_test.txt",
-        },
-        "qa26": {
-            "train": "datasets/qa26-shopping-available_train.txt",
-            "test": "datasets/qa26-shopping-available_test.txt",
-        },
-        "qa27": {   # turns
-            "train": "datasets/qa27-shopping-available-turns_train.txt",
-            "test": "datasets/qa27-shopping-available-turns_test.txt",
+            "train": "datasets/qa25-shopping-interested-turns_train.txt",
+            "test": "datasets/qa25-shopping-interested-turns_test.txt",
         },
     },
 }
