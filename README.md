@@ -32,29 +32,38 @@ pip install evaluate==0.4.6
 |  qa2  |  50  |    1e-04    |    8     |   865/1000   |   779/1000  |
 |  qa1 + qa2 | 50 | 1e-04    |    8     |   929/1000   |  1000/1000  |
 
+
+|task_no |epochs|learning_rate|batch_size|  corrects/all  |
+|--------|------|-------------|----------|----------------|
+|  qa22  |  1   |    1e-4     |    8     |   ????/10000   |
+|  qa22  |  1   |    5e-5     |    8     |   ????/10000   |
+|  qa22  |  1   |    1e-4     |    10    |   ????/10000   |
+|  qa22  |  1   |    5e-5     |    10    |   ????/10000   |
+
+
 ## Tasks
 |task_no|task_name|
-|----|------------|
-|qa1 |single-supporting-fact|
-|qa2 |two-supporting-facts|
-|qa3 |three-supporting-facts|
-|qa4 |two-arg-relations|
-|qa5 |three-arg-relations|
-|qa6 |yes-no-questions|
-|qa7 |counting|
-|qa8 |lists-sets|
-|qa9 |simple-negation|
-|qa10| indefinite-knowledge|
-|qa11| basic-coreference|
-|qa12| conjunction|
-|qa13| compound-coreference|
-|qa14| time-reasoning|
-|qa15| basic-deduction|
-|qa16| basic-induction|
-|qa17| positional-reasoning|
-|qa18| size-reasoning|
-|qa19| path-finding|
-|qa20| agents-motivations|
+|------|-----------------------|
+| qa1  | single-supporting-fact|
+| qa2  | two-supporting-facts|
+| qa3  | three-supporting-facts|
+| qa4  | two-arg-relations|
+| qa5  | three-arg-relations|
+| qa6  | yes-no-questions|
+| qa7  | counting|
+| qa8  | lists-sets|
+| qa9  | simple-negation|
+| qa10 | indefinite-knowledge|
+| qa11 | basic-coreference|
+| qa12 | conjunction|
+| qa13 | compound-coreference|
+| qa14 | time-reasoning|
+| qa15 | basic-deduction|
+| qa16 | basic-induction|
+| qa17 | positional-reasoning|
+| qa18 | size-reasoning|
+| qa19 | path-finding|
+| qa20 | agents-motivations|
 
 
 ## Acknowledgements:

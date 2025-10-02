@@ -16,18 +16,18 @@ Answer:
 """
 
 paths = {
-    "shopping": {
+    "en": {
         "qa21": {
             "train": "datasets/qa21-shopping-dialogue_train.txt",
             "test": "datasets/qa21-shopping-dialogue_test.txt",
         },
         "qa22": {
-            "train": "datasets/qa22-shopping-interested_train-2k.txt",
-            "test": "datasets/qa22-shopping-interested_test-2k.txt",
+            "train": "datasets/qa22-shopping-interested_train.txt",
+            "test": "datasets/qa22-shopping-interested_test.txt",
         },
         "qa23": {   # turns
-            "train": "datasets/qa23-shopping-interested-turns_train-2k.txt",
-            "test": "datasets/qa23-shopping-interested-turns_test-2k.txt",
+            "train": "datasets/qa23-shopping-interested-turns_train.txt",
+            "test": "datasets/qa23-shopping-interested-turns_test.txt",
         },
         "qa24": {
             "train": "datasets/qa24-shopping-interested_train.txt",
@@ -36,6 +36,16 @@ paths = {
         "qa25": {   # turns
             "train": "datasets/qa25-shopping-interested-turns_train.txt",
             "test": "datasets/qa25-shopping-interested-turns_test.txt",
+        },
+    },
+    "en-10k": {
+        "qa22": {
+            "train": "datasets/qa22-shopping-interested_train-10k.txt",
+            "test": "datasets/qa22-shopping-interested_test-10k.txt",
+        },
+        "qa23": {   # turns
+            "train": "datasets/qa23-shopping-interested-turns_train-10k.txt",
+            "test": "datasets/qa23-shopping-interested-turns_test-10k.txt",
         },
     },
 }
@@ -98,11 +108,12 @@ class BabiqaDataset():
     def __init__(self,tokenizer, task_no="qa1", split="train", no_answer=False) -> None:
         self.tokenizer:PreTrainedTokenizer = tokenizer
 
-        if task_no in paths['shopping']:
-            dataset = load_babi_txt(paths['shopping'][task_no][split])
+        category = "en" # or "en-10k"
+        if task_no in paths[category]:
+            dataset = load_babi_txt(paths[category][task_no][split])
         else:
             dataset = list(get_next_qa(
-                load_dataset('babi_qa', type='en', task_no=task_no)[split]
+                load_dataset('babi_qa', type=category, task_no=task_no)[split]
             ))
         self.data = dataset
         self.no_answer = no_answer

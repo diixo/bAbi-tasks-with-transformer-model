@@ -340,14 +340,14 @@ if __name__ == "__main__":
 
     if True:
 
-        samples = 2000
+        samples = 1000
 
         train_stories, train_turns = generate_v4(samples)
 
-        with open("datasets/qa22-shopping-interested_train-2k.txt", "w", encoding="utf-8") as f:
+        with open("datasets/qa22-shopping-interested_train.txt", "w", encoding="utf-8") as f:
             f.writelines(train_stories)
 
-        with open("datasets/qa23-shopping-interested-turns_train-2k.txt", "w", encoding="utf-8") as f:
+        with open("datasets/qa23-shopping-interested-turns_train.txt", "w", encoding="utf-8") as f:
             f.writelines(train_turns)
 
         print(f"Train: sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
@@ -355,10 +355,35 @@ if __name__ == "__main__":
 
         test_stories, test_turns = generate_v4(samples)
 
-        with open("datasets/qa22-shopping-interested_test-2k.txt", "w", encoding="utf-8") as f:
+        with open("datasets/qa22-shopping-interested_test.txt", "w", encoding="utf-8") as f:
             f.writelines(test_stories)
 
-        with open("datasets/qa23-shopping-interested-turns_test-2k.txt", "w", encoding="utf-8") as f:
+        with open("datasets/qa23-shopping-interested-turns_test.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_turns)
+
+        print(f"Test: sampeles={samples}, test_stories={len(test_stories)}, test_turns={len(test_turns)} ")
+
+    if True:
+
+        samples = 10000
+
+        train_stories, train_turns = generate_v4(samples)
+
+        with open("datasets/qa22-shopping-interested_train-10k.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_stories)
+
+        with open("datasets/qa23-shopping-interested-turns_train-10k.txt", "w", encoding="utf-8") as f:
+            f.writelines(train_turns)
+
+        print(f"Train: sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+
+
+        test_stories, test_turns = generate_v4(samples)
+
+        with open("datasets/qa22-shopping-interested_test-10k.txt", "w", encoding="utf-8") as f:
+            f.writelines(test_stories)
+
+        with open("datasets/qa23-shopping-interested-turns_test-10k.txt", "w", encoding="utf-8") as f:
             f.writelines(test_turns)
 
         print(f"Test: sampeles={samples}, test_stories={len(test_stories)}, test_turns={len(test_turns)} ")
