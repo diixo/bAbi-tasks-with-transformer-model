@@ -65,7 +65,11 @@ assortment = [
 # 10
     ["shawl", "pants", "cap", "sneakers", "hat", "sundress", "headscarf", "jumpsuit", "swimsuit", "bodysuit",],
 # 11
-    ["hanger", "blender", "audio-speakers", "keyboard", "tablet-pc", "monitor", "pantyhose", "curtains", "blinds", "sandals",]
+    ["hanger", "blender", "audio-speakers", "keyboard", "tablet-pc", "monitor", "pantyhose", "curtain", "blinds", "sandals",],
+# 12
+    ["hoover", "notebook", "diary", "calendar", "toothpaste", "toothbrush", "gloves", "tie", "mittens", "thermometer", ],
+# 13
+    #["bedspread", "pillowcase", "sheet", "hammer", "axe", "pliers", "toaster", "grinder", "tongs", "nippers",],
 ]
 
 flat = [item for array in assortment for item in array]
