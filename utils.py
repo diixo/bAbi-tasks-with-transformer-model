@@ -20,3 +20,19 @@ def parse_answer(text: str, eos_token):
     except:
         answer = ""
     return answer
+
+
+def items_to_story(items: list) -> str:
+    return "".join([ f"{id+1} {item}\n" for id, item in enumerate(items) ])
+
+def items_to_turns(items: list[str]) -> list:
+    turn_list = []
+    for item in items:
+        if item.find("System: ") == 0 or item.find("User:") == 0:
+            turn_list.append(item)
+        if item.find("Assistant: ") == 0:
+            separator = item.find(":")
+            assistant = item[:separator+1]
+            utterance = item[separator+1:]
+            turn_list.append(f"{assistant.strip()}\t{utterance.strip()}\t0")
+    return turn_list
