@@ -113,7 +113,7 @@ def generate_story(story: list):
 
         intent = random.choice(intent_examples.get(transition, [f"I perform {transition}."]))
         
-        story.append(f"Developer: {intent}")
+        story.append(f"User: {intent}")
 
         story.append(f"next ticket {ticket_id} status?\t{next_state}\t0")
 
