@@ -58,7 +58,15 @@ workflow = {
 
 intent_examples = {
     "To Implement": ["I started implementation.", "Beginning to write code.", "Starting development work."],
-    "To Test": ["The feature is ready for testing.", "I need to test the changes.", "Ready for QA.", "I have to finish implementation for today",],
+    "To Test": [
+        "The feature is ready for testing.",
+        "I need to test the changes.",
+        "Ready for QA.",
+        "I have to finish the implementation for today",
+        "Finish the implementation",
+        "Prepare for testing",
+        "Have to finish implementation",
+        ],
     "To Under Verification": ["Changes are under verification.", "I sent it for verification.", "Verifying the fix."],
     "To Blocked": ["I'm blocked by missing data.", "Waiting for input from customer.", "Work is blocked.", "Need more information."],
     "To Suspended": ["Pausing work temporarily.", "The task is suspended until next sprint."],
@@ -75,10 +83,11 @@ intent_examples = {
 
 def generate_story(story: list):
     max_steps = 7
-    ticket_id = random.randint(999, 999999)
+    ticket_id = random.randint(99, 9999)
 
     current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
-    current_state = "IMPLEMENTATION"
+    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION",])
+
     #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
 
     story.append("System: You are development Assistant.")
@@ -89,7 +98,9 @@ def generate_story(story: list):
 
     story.append("Assistant: Do you have any assigned tickets on you?")
 
-    story.append(f"User: ticket #{ticket_id}, status {current_state}")
+    story.append(f"User: ticket {ticket_id}, status {current_state}")
+    story.append(f"current ticket {ticket_id} status?\t{current_state}\t0")
+    story.append(f"next ticket {ticket_id} status?\t{current_state}\t0")
 
     story.append(f"Assistant: What do you plan to do with it?")
 
@@ -102,10 +113,13 @@ def generate_story(story: list):
         intent = random.choice(intent_examples.get(transition, [f"I perform {transition}."]))
         
         story.append(f"Developer: {intent}")
+
+        story.append(f"next ticket {ticket_id} status?\t{next_state}\t0")
+
         story.append(f"Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\".")
         current_state = next_state
 
-    story.append(f"What is the current status of ticket?\t{{current_state}}\t0")
+    story.append(f"next ticket {ticket_id} status?\t{current_state}\t0")
 
 
 States = [k for k, v in workflow["State"].items()]
