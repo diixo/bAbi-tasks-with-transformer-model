@@ -58,7 +58,7 @@ workflow = {
 
 intent_examples = {
     "To Implement": ["I started implementation.", "Beginning to write code.", "Starting development work."],
-    "To Test": ["The feature is ready for testing.", "I need to test the changes.", "Ready for QA."],
+    "To Test": ["The feature is ready for testing.", "I need to test the changes.", "Ready for QA.", "I have to finish implementation for today",],
     "To Under Verification": ["Changes are under verification.", "I sent it for verification.", "Verifying the fix."],
     "To Blocked": ["I'm blocked by missing data.", "Waiting for input from customer.", "Work is blocked.", "Need more information."],
     "To Suspended": ["Pausing work temporarily.", "The task is suspended until next sprint."],
@@ -73,27 +73,25 @@ intent_examples = {
     "Back to System Integration": ["Going back to integration testing stage."],
 }
 
-def generate_story():
-    max_steps = 5
+def generate_story(story: list):
+    max_steps = 7
     ticket_id = random.randint(999, 999999)
 
     current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
+    current_state = "IMPLEMENTATION"
     #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
-    story = []
 
-    story.append("0 System: You are development Assistant.")
-    story.append("0 Assistant: Hi, I am development Assistant.")
+    story.append("System: You are development Assistant.")
+    story.append("Assistant: Hi, I am development Assistant.")
 
     asking = ["ok", "yes", "maybe", "Ok", "Yes", "Maybe", "continue", "Continue", "Let's go", "let's go"]
-    story.append(f"1 User: {random.choice(asking)}")
+    story.append(f"User: {random.choice(asking)}")
 
-    story.append("2 Assistant: Do you have any assigned tickets on you?")
+    story.append("Assistant: Do you have any assigned tickets on you?")
 
-    story.append(f"3 User: ticket #{ticket_id}, in state={current_state}")
+    story.append(f"User: ticket #{ticket_id}, status {current_state}")
 
-    story.append(f"4 Assistant: What do you plan to do with it?")
-
-    step = 5
+    story.append(f"Assistant: What do you plan to do with it?")
 
     for _ in range(max_steps):
         transitions = workflow["State"].get(current_state, [])
@@ -103,20 +101,18 @@ def generate_story():
 
         intent = random.choice(intent_examples.get(transition, [f"I perform {transition}."]))
         
-        story.append(f"{step} Developer: {intent}"); step += 1
-        story.append(f"{step} Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\"."); step += 1
+        story.append(f"Developer: {intent}")
+        story.append(f"Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\".")
         current_state = next_state
 
-    story.append(f"\nQ: What is the current state of ticket #{ticket_id}?")
-    story.append(f"A: {current_state}")
-    return "\n".join(story)
+    story.append(f"What is the current status of ticket?\t{{current_state}}\t0")
 
 
 States = [k for k, v in workflow["State"].items()]
 Transitions = [k for k, v in workflow["Transition"].items()]
 
 
-def generate_v1(samples: int) -> list:
+def generate_dev(samples: int) -> list:
 
     stories = []
     turn_stories = []
@@ -128,15 +124,7 @@ def generate_v1(samples: int) -> list:
 
         items = []
 
-        items.append("System: You are development Assistant.")
-        items.append("Assistant: Hi, I am development Assistant.")
-
-        for state in States:
-            items.append(f"User: \"{state}\". What does it means?")
-
-            transitions = workflow["State"][state]
-            transitions_txt = ", ".join(["\"" + t + "\"" for t in transitions])
-            items.append(f"Assistant: {state} is ticket status from project workflow. Applicable transition actions to change current status: {transitions_txt}.")
+        generate_story(items)
 
         stories.append(items_to_story(items))
 
@@ -187,12 +175,26 @@ def generate_v2(samples: int) -> list:
 
 if __name__ == "__main__":
 
-    # print(States)
+    samples = 1000
 
-    # print(Transitions)
+    train_stories, train_turns = generate_dev(samples)
 
-    # items, stories = generate_v1(1000)
+    with open("datasets/qa-dev_train.txt", "w", encoding="utf-8") as f:
+        f.writelines(train_stories)
 
-    for i in range(1, 3):
-        print(generate_story())
-        print("\n" + "-"*80 + "\n")
+    with open("datasets/qa-dev-turns_train.txt", "w", encoding="utf-8") as f:
+        f.writelines(train_turns)
+
+    print(f"Train: sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
+
+
+    test_stories, test_turns = generate_dev(samples)
+
+    with open("datasets/qa-dev_test.txt", "w", encoding="utf-8") as f:
+        f.writelines(test_stories)
+
+    with open("datasets/qa-dev-turns_test.txt", "w", encoding="utf-8") as f:
+        f.writelines(test_turns)
+
+    print(f"Test: sampeles={samples}, test_stories={len(test_stories)}, test_turns={len(test_turns)} ")
+
