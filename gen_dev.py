@@ -60,40 +60,56 @@ intent_examples = {
     "To Implement": ["I started implementation.", "Beginning to write code.", "Starting development work."],
     "To Test": ["The feature is ready for testing.", "I need to test the changes.", "Ready for QA."],
     "To Under Verification": ["Changes are under verification.", "I sent it for verification.", "Verifying the fix."],
-    "To Blocked": ["I'm blocked by missing data.", "Waiting for input from customer.", "Work is blocked."],
+    "To Blocked": ["I'm blocked by missing data.", "Waiting for input from customer.", "Work is blocked.", "Need more information."],
     "To Suspended": ["Pausing work temporarily.", "The task is suspended until next sprint."],
-    "To Do": ["I’ll start this task soon.", "Planning to pick it up next."],
+    "To Do": ["I\'ll start this task soon.", "Planning to pick it up next."],
     "Close ADMIN": ["The issue is resolved and can be closed.", "Closing the ticket after verification."],
     "Reopen": ["Need to reopen the ticket.", "Reopening for rework."],
     "Fixes Needed": ["Verification failed, fixes required.", "Need to redo the implementation."],
-    "Back To Do": ["Returning to To Do for reassignment."],
-    "Back to Implementation": ["Resuming implementation after pause."],
+    "Back To Do": ["Returning to To Do for reassignment.", "Putting task back in To Do for someone else."],
+    "Back to Implementation": ["Resuming implementation after pause.", "Getting back to development."],
     "Back to Under Verification": ["Retrying verification again."],
     "Back to SW Testing": ["Retesting in QA environment."],
     "Back to System Integration": ["Going back to integration testing stage."],
 }
 
-def generate_dialog(ticket_id=1, max_steps=4):
-    current_state = "JUST REGISTERED"
-    dialog = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
-    step = 2
+def generate_story():
+    max_steps = 5
+    ticket_id = random.randint(999, 999999)
 
-    for _ in range(random.randint(2, max_steps)):
+    current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
+    #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
+    story = []
+
+    story.append("0 System: You are development Assistant.")
+    story.append("0 Assistant: Hi, I am development Assistant.")
+
+    asking = ["ok", "yes", "maybe", "Ok", "Yes", "Maybe", "continue", "Continue", "Let's go", "let's go"]
+    story.append(f"1 User: {random.choice(asking)}")
+
+    story.append("2 Assistant: Do you have any assigned tickets on you?")
+
+    story.append(f"3 User: ticket #{ticket_id}, in state={current_state}")
+
+    story.append(f"4 Assistant: What do you plan to do with it?")
+
+    step = 5
+
+    for _ in range(max_steps):
         transitions = workflow["State"].get(current_state, [])
         if not transitions: break
         transition = random.choice(transitions)
         next_state = workflow["Transition"][transition]
 
-        # выбираем естественную фразу девелопера
         intent = random.choice(intent_examples.get(transition, [f"I perform {transition}."]))
         
-        dialog.append(f"{step} Developer: {intent}"); step += 1
-        dialog.append(f"{step} Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\"."); step += 1
+        story.append(f"{step} Developer: {intent}"); step += 1
+        story.append(f"{step} Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\"."); step += 1
         current_state = next_state
 
-    dialog.append(f"\nQ: What is the current state of ticket #{ticket_id}?")
-    dialog.append(f"A: {current_state}")
-    return "\n".join(dialog)
+    story.append(f"\nQ: What is the current state of ticket #{ticket_id}?")
+    story.append(f"A: {current_state}")
+    return "\n".join(story)
 
 
 States = [k for k, v in workflow["State"].items()]
@@ -178,5 +194,5 @@ if __name__ == "__main__":
     # items, stories = generate_v1(1000)
 
     for i in range(1, 3):
-        print(generate_dialog(i))
+        print(generate_story())
         print("\n" + "-"*80 + "\n")
