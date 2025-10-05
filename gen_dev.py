@@ -66,6 +66,7 @@ intent_examples = {
         "Finish the implementation",
         "Prepare for testing",
         "Have to finish implementation",
+        "Continue and finish implementation",
         ],
     "To Under Verification": ["Changes are under verification.", "I sent it for verification.", "Verifying the fix."],
     "To Blocked": ["I'm blocked by missing data.", "Waiting for input from customer.", "Work is blocked.", "Need more information."],
