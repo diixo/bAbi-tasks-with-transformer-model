@@ -11,8 +11,10 @@ class Chatbot_gpt2:
         self.tokenizer = GPT2Tokenizer.from_pretrained(model_dir)
         self.model = GPT2LMHeadModel.from_pretrained(model_dir)
 
+        self.conversation_history = deque(maxlen=512)
 
-    def build_prompt(self, conversation_history, user_message):
+
+    def build_prompt(self, user_message):
         # Create prompt for model in format:
         """
         System:
@@ -24,7 +26,7 @@ class Chatbot_gpt2:
         """
         prompt = f"System:\n{self.system_prompt}\n"
 
-        for role, content in conversation_history:
+        for role, content in self.conversation_history:
             if role == "user":
                 prompt += f"User:\n{content}\n"
             elif role == "assistant":
@@ -51,29 +53,27 @@ class Chatbot_gpt2:
         return text
 
 
-    def handle_user_message(self, conversation_history, user_message=None):
+    def handle_user_message(self, user_message=None):
         # Build prompt
-        prompt = self.build_prompt(conversation_history, user_message)
+        prompt = self.build_prompt(user_message)
 
         # create response
         assistant_reply = self.generate_response(prompt)
 
         # Update history by pair: user+prompt.
         if user_message:
-            conversation_history.append(("user", user_message))
+            self.conversation_history.append(("user", user_message))
         else: # init, appand prompt as welcole-message
             assistant_reply = prompt + assistant_reply
-        conversation_history.append(("assistant", assistant_reply))
 
-        return assistant_reply, conversation_history
+        self.conversation_history.append(("assistant", assistant_reply))
+        return assistant_reply
 
 
 if __name__ == "__main__":
 
-    conversation_history = deque(maxlen=512)
-
-    chat = Chatbot_gpt2("You are online shopping Assistant. Available items: skirt.")
-    start_prompt, _ = chat.handle_user_message(conversation_history)
+    chat = Chatbot_gpt2("You are developer Assistant.")
+    start_prompt = chat.handle_user_message()
     
     print(f"{80*'-'}\n{start_prompt}")
 
@@ -83,6 +83,6 @@ if __name__ == "__main__":
         if user_message.strip().lower() == "exit":
             break
 
-        assistant_reply, conversation_history = chat.handle_user_message(conversation_history, user_message)
+        assistant_reply = chat.handle_user_message(user_message)
 
         print(f"Assistant: {assistant_reply}")
