@@ -80,6 +80,14 @@ class Dialogue_gpt2:
         ]
 
 
+    def get_last_answer(self):
+        role, msg = self.conversation_history[-1]
+        return {
+            "role": role,
+            "utterance": msg.replace("\n", " ").removeprefix(f"{role}: ").strip()
+            }
+
+
 if __name__ == "__main__":
 
     chat = Dialogue_gpt2("You are developer Assistant.")
