@@ -3,7 +3,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from collections import deque
 
 
-class Chatbot_gpt2:
+class Dialogue_gpt2:
 
     def __init__(self, system_prompt: str):
         model_dir = "gpt2-babi"
@@ -72,7 +72,7 @@ class Chatbot_gpt2:
 
 if __name__ == "__main__":
 
-    chat = Chatbot_gpt2("You are developer Assistant.")
+    chat = Dialogue_gpt2("You are developer Assistant.")
     start_prompt = chat.handle_user_message()
     
     print(f"{80*'-'}\n{start_prompt}")
