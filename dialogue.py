@@ -24,7 +24,7 @@ class Dialogue_gpt2:
         Assistant:
         {response}
         """
-        prompt = f"System:\n{self.system_prompt}\n"
+        prompt = ""
 
         for role, content in self.conversation_history:
             if role == "user":
@@ -54,25 +54,28 @@ class Dialogue_gpt2:
 
 
     def handle_user_message(self, user_message=None):
+
+        system = f"System:\n{self.system_prompt}\n"
+
         # Build prompt
         prompt = self.build_prompt(user_message)
 
         # create response
-        assistant_reply = self.generate_response(prompt)
+        assistant_reply = self.generate_response(system + prompt)
 
         # Update history by pair: user+prompt.
         if user_message:
-            self.conversation_history.append(("user", user_message))
+            self.conversation_history.append(("User", user_message))
         else: # init, appand prompt as welcole-message
             assistant_reply = prompt + assistant_reply
 
-        self.conversation_history.append(("assistant", assistant_reply))
+        self.conversation_history.append(("Assistant", assistant_reply))
         return assistant_reply
 
 
     def get_history(self):
         return [
-            { "role": role, "content": msg }
+            { "role": role, "utterance": msg.replace("\n", " ").removeprefix(f"{role}: ").strip() }
             for role, msg in self.conversation_history
         ]
 
