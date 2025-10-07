@@ -70,6 +70,13 @@ class Dialogue_gpt2:
         return assistant_reply
 
 
+    def get_history(self):
+        return [
+            { "role": role, "content": msg }
+            for role, msg in self.conversation_history
+        ]
+
+
 if __name__ == "__main__":
 
     chat = Dialogue_gpt2("You are developer Assistant.")
