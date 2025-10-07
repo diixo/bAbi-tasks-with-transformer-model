@@ -8,6 +8,7 @@ Fine tune and evaluate transformer model on facebook's bAbi tasks.
 
 ```bash
 pip install numpy==1.26.4
+pip install tensorflow==2.14.0
 pip install torch==2.5.1+cu118
 pip install pandas==2.3.1
 pip install datasets==3.6.0
