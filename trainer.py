@@ -15,11 +15,11 @@ def create_test_args() -> list:
     return [
         "trainer.py",
         "gpt2",
-        "-task_number", "22",
-        "-lr", "1e-4",  # do not increase
+        "-task_number", "27",
+        "-lr", "1e-4",
         "-epoch", "1",
         "-batch_size", "8",
-        #"-grouping", "True",
+        "-grouping", "True",
     ]
 
 
@@ -70,13 +70,13 @@ def make_dataset(task_number, grouping=False):
             train_ds = ConcatDataset(
                 [
                     BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id}")
-                    for task_id in range(22, task_number+1)
+                    for task_id in range(26, task_number+1)
                 ]
             )
             test_ds = ConcatDataset(
                 [
                     BabiqaDataset(tokenizer, split="test", task_no=f"qa{task_id}")
-                    for task_id in range(22, task_number+1)
+                    for task_id in range(26, task_number+1)
                 ]
             )
         else:

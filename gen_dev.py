@@ -68,8 +68,16 @@ intent_examples = {
         "Have to finish implementation",
         "Continue and finish implementation",
         ],
-    "To Under Verification": ["Changes are under verification.", "I sent it for verification.", "Verifying the fix."],
-    "To Blocked": ["I'm blocked by missing data.", "Waiting for input from customer.", "Work is blocked.", "Need more information."],
+    "To Under Verification": ["Changes are under verification.", "I sent it for verification.", "Verifying the fix.", "verify fix"],
+    "To Blocked": [
+        "I'm blocked by missing data.",
+        "Waiting for input from customer.",
+        "Work is blocked.",
+        "Need more information.",
+        "implementation is blocked",
+        "waiting additional information from customer",
+        "waiting more information from customer",
+        ],
     "To Suspended": ["Pausing work temporarily.", "The task is suspended until next sprint."],
     "To Do": ["I\'ll start this task soon.", "Planning to pick it up next."],
     "Close ADMIN": ["The issue is resolved and can be closed.", "Closing the ticket after verification."],
@@ -82,28 +90,46 @@ intent_examples = {
     "Back to System Integration": ["Going back to integration testing stage."],
 }
 
+
+# actions = { action: current_status }
+actions = {
+    "continue implementation": "IMPLEMENTATION",
+    "continue analysis": "TO DO",
+    "continue testing": "IN SW TESTING",
+    "continue verification": "UNDER VERIFICATION",
+    "finish implementation": "IMPLEMENTATION",
+    "finish analysis": "TO DO",
+    "finish testing": "IN SW TESTING",
+    "finish verification": "UNDER VERIFICATION",
+    }
+
+
 def generate_story(story: list):
     max_steps = 7
     ticket_id = random.randint(99, 9999)
-
-    current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
-    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION",])
 
     #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
 
     story.append("System: You are development Assistant.")
     story.append("Assistant: Hi, I am development Assistant.")
 
-    asking = ["ok", "yes", "maybe", "Ok", "Yes", "Maybe", "continue", "Continue", "Let's go", "let's go"]
+    asking = ["Hello", "Hi", "hello", "hi", "ok", "yes", "maybe", "Ok", "Yes", "Maybe", "continue", "Continue", "Let's go", "let's go"]
     story.append(f"User: {random.choice(asking)}")
 
     story.append("Assistant: Do you have any assigned tickets on you?")
 
-    story.append(f"User: ticket {ticket_id}, status {current_state}")
-    story.append(f"current ticket {ticket_id} status?\t{current_state}\t0")
-    story.append(f"next ticket {ticket_id} status?\t{current_state}\t0")
+    story.append(f"User: ticket {ticket_id}")
 
     story.append(f"Assistant: What do you plan to do with it?")
+
+    action = random.choice(list(actions.keys()))
+    story.append(f"User: {action}")
+
+    current_state = actions[action]
+
+    story.append(f"current status of ticket {ticket_id}?\t{current_state}\t0")
+    story.append(f"next status of ticket {ticket_id}?\t{current_state}\t0")
+
 
     for _ in range(max_steps):
         transitions = workflow["State"].get(current_state, [])
@@ -194,10 +220,10 @@ if __name__ == "__main__":
 
     train_stories, train_turns = generate_dev(samples)
 
-    with open("datasets/qa-dev_train.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa26-dev_train.txt", "w", encoding="utf-8") as f:
         f.writelines(train_stories)
 
-    with open("datasets/qa-dev-turns_train.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa27-dev-turns_train.txt", "w", encoding="utf-8") as f:
         f.writelines(train_turns)
 
     print(f"Train: sampeles={samples}, train_stories={len(train_stories)}, train_turns={len(train_turns)} ")
@@ -205,10 +231,10 @@ if __name__ == "__main__":
 
     test_stories, test_turns = generate_dev(samples)
 
-    with open("datasets/qa-dev_test.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa26-dev_test.txt", "w", encoding="utf-8") as f:
         f.writelines(test_stories)
 
-    with open("datasets/qa-dev-turns_test.txt", "w", encoding="utf-8") as f:
+    with open("datasets/qa27-dev-turns_test.txt", "w", encoding="utf-8") as f:
         f.writelines(test_turns)
 
     print(f"Test: sampeles={samples}, test_stories={len(test_stories)}, test_turns={len(test_turns)} ")

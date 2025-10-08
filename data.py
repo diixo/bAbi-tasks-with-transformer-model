@@ -38,12 +38,12 @@ paths = {
             "test": "datasets/qa25-shopping-interested-turns_test.txt",
         },
         "qa26": {
-            "train": "datasets/qa-dev_train.txt",
-            "test":  "datasets/qa-dev_test.txt",
+            "train": "datasets/qa26-dev_train.txt",
+            "test":  "datasets/qa26-dev_test.txt",
         },
         "qa27": {   # turns
-            "train": "datasets/qa-dev-turns_train.txt",
-            "test":  "datasets/qa-dev-turns_test.txt",
+            "train": "datasets/qa27-dev-turns_train.txt",
+            "test":  "datasets/qa27-dev-turns_test.txt",
         },
     },
     "en-10k": {
