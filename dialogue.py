@@ -1,20 +1,24 @@
 
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from collections import deque
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Conversation:
+    system_prompt: str
+    conversation_history: deque = field(default_factory=lambda: deque(maxlen=512))
 
 
 class Dialogue_gpt2:
 
-    def __init__(self, system_prompt: str):
+    def __init__(self):
         model_dir = "gpt2-babi"
-        self.system_prompt = system_prompt
         self.tokenizer = GPT2Tokenizer.from_pretrained(model_dir)
         self.model = GPT2LMHeadModel.from_pretrained(model_dir)
 
-        self.conversation_history = deque(maxlen=512)
 
-
-    def build_prompt(self, user_message):
+    def build_prompt(self, conv: Conversation, user_message):
         # Create prompt for model in format:
         """
         System:
@@ -26,7 +30,7 @@ class Dialogue_gpt2:
         """
         prompt = ""
 
-        for role, content in self.conversation_history:
+        for role, content in conv.conversation_history:
             if role == "user":
                 prompt += f"User:\n{content}\n"
             elif role == "assistant":
@@ -53,45 +57,51 @@ class Dialogue_gpt2:
         return text
 
 
-    def handle_user_message(self, user_message=None):
+    def handle_user_message(self, conv: Conversation, user_message=None):
 
-        system = f"System:\n{self.system_prompt}\n"
+        system = f"System:\n{conv.system_prompt}\n"
 
         # Build prompt
-        prompt = self.build_prompt(user_message)
+        prompt = self.build_prompt(conv, user_message)
 
         # create response
         assistant_reply = self.generate_response(system + prompt)
 
         # Update history by pair: user+prompt.
         if user_message:
-            self.conversation_history.append(("User", user_message))
+            conv.conversation_history.append(("User", user_message))
         else: # init, appand prompt as welcole-message
             assistant_reply = prompt + assistant_reply
 
-        self.conversation_history.append(("Assistant", assistant_reply))
+        conv.conversation_history.append(("Assistant", assistant_reply))
         return assistant_reply
 
 
-    def get_history(self):
+    def get_messages(self, conv: Conversation):
         return [
             { "role": role, "utterance": msg.replace("\n", " ").removeprefix(f"{role}: ").strip() }
-            for role, msg in self.conversation_history
+            for role, msg in conv.conversation_history
         ]
 
 
-    def get_last_answer(self):
-        role, msg = self.conversation_history[-1]
+    def get_last_answer(self, conv: Conversation):
+        role, msg = conv.conversation_history[-1]
         return {
             "role": role,
             "utterance": msg.replace("\n", " ").removeprefix(f"{role}: ").strip()
             }
 
+    def clear(self, conv: Conversation):
+        conv.conversation_history.clear()
+        self.handle_user_message(conv)
+
 
 if __name__ == "__main__":
 
-    chat = Dialogue_gpt2("You are developer Assistant.")
-    start_prompt = chat.handle_user_message()
+    conversation = Conversation(system_prompt="You are developer Assistant.")
+
+    chat = Dialogue_gpt2()
+    start_prompt = chat.handle_user_message(conversation)
     
     print(f"{80*'-'}\n{start_prompt}")
 
@@ -101,6 +111,7 @@ if __name__ == "__main__":
         if user_message.strip().lower() == "exit":
             break
 
-        assistant_reply = chat.handle_user_message(user_message)
+        assistant_reply = chat.handle_user_message(conversation, user_message)
+        assert assistant_reply == chat.get_last_answer(conversation)["utterance"]
 
         print(f"Assistant: {assistant_reply}")
