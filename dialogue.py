@@ -84,18 +84,6 @@ class Dialogue_gpt2:
         ]
 
 
-    def get_last_answer(self, conv: Conversation):
-        role, msg = conv.conversation_history[-1]
-        return {
-            "role": role,
-            "utterance": msg.replace("\n", " ").removeprefix(f"{role}: ").strip()
-            }
-
-    def clear(self, conv: Conversation):
-        conv.conversation_history.clear()
-        self.handle_user_message(conv)
-
-
 if __name__ == "__main__":
 
     conversation = Conversation(system_prompt="You are developer Assistant.")
@@ -112,6 +100,5 @@ if __name__ == "__main__":
             break
 
         assistant_reply = chat.handle_user_message(conversation, user_message)
-        assert assistant_reply == chat.get_last_answer(conversation)["utterance"]
 
         print(f"Assistant: {assistant_reply}")
