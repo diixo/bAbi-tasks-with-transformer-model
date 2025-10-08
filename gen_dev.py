@@ -101,6 +101,16 @@ actions = {
     "finish analysis": "TO DO",
     "finish testing": "IN SW TESTING",
     "finish verification": "UNDER VERIFICATION",
+    "finish integration": "IN SYSTEM INTEGRATION",
+    "continue integration": "IN SYSTEM INTEGRATION",
+    }
+
+target_states = {
+    "TO DO": "IMPLEMENTATION",
+    "IMPLEMENTATION": "IN SW TESTING",
+    "IN SW TESTING": "IN SYSTEM INTEGRATION",
+    "IN SYSTEM INTEGRATION": "UNDER VERIFICATION",
+    "UNDER VERIFICATION": "CLOSED",
     }
 
 
@@ -109,6 +119,8 @@ def generate_story(story: list):
     ticket_id = random.randint(99, 9999)
 
     #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
+    current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
+    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION",])
 
     story.append("System: You are development Assistant.")
     story.append("Assistant: Hi, I am development Assistant.")
@@ -116,37 +128,40 @@ def generate_story(story: list):
     asking = ["Hello", "Hi", "hello", "hi", "ok", "yes", "maybe", "Ok", "Yes", "Maybe", "continue", "Continue", "Let's go", "let's go"]
     story.append(f"User: {random.choice(asking)}")
 
-    story.append("Assistant: Do you have any assigned tickets on you?")
+    story.append("Assistant: Do you have any tickets assigned on you?")
 
-    story.append(f"User: ticket {ticket_id}")
+    story.append(f"User: ticket {ticket_id}, in status: {current_state.lower()}")
+    story.append(f"ticket {ticket_id} current status?\t{current_state}\t0")
+    story.append(f"ticket {ticket_id} target status?\t{current_state}\t0")
 
-    story.append(f"Assistant: What do you plan to do with it?")
+    story.append("Assistant: What do you plan to do with it?")
 
-    action = random.choice(list(actions.keys()))
-    story.append(f"User: {action}")
+    # action = random.choice(list(actions.keys()))
+    # story.append(f"User: {action}")
 
-    current_state = actions[action]
+    # current_state = actions[action]
 
-    story.append(f"current status of ticket {ticket_id}?\t{current_state}\t0")
-    story.append(f"next status of ticket {ticket_id}?\t{current_state}\t0")
+    # story.append(f"current status of ticket {ticket_id}?\t{current_state}\t0")
+    # story.append(f"target status of ticket {ticket_id}?\t{target_states[current_state]}\t0")
 
 
     for _ in range(max_steps):
+
         transitions = workflow["State"].get(current_state, [])
         if not transitions: break
         transition = random.choice(transitions)
         next_state = workflow["Transition"][transition]
 
-        intent = random.choice(intent_examples.get(transition, [f"I perform {transition}."]))
+        intent = random.choice(intent_examples.get(transition, [f"I will perform {transition}."]))
         
         story.append(f"User: {intent}")
 
-        story.append(f"next ticket {ticket_id} status?\t{next_state}\t0")
+        story.append(f"ticket {ticket_id} next status?\t{next_state}\t0")
 
         story.append(f"Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\".")
         current_state = next_state
 
-    story.append(f"next ticket {ticket_id} status?\t{current_state}\t0")
+    story.append(f"ticket {ticket_id} next status?\t{current_state}\t0")
 
 
 States = [k for k, v in workflow["State"].items()]
