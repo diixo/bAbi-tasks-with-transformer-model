@@ -164,10 +164,6 @@ def generate_story(story: list):
     story.append(f"ticket {ticket_id} next status?\t{current_state}\t0")
 
 
-States = [k for k, v in workflow["State"].items()]
-Transitions = [k for k, v in workflow["Transition"].items()]
-
-
 def generate_dev(samples: int) -> list:
 
     stories = []
