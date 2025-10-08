@@ -164,6 +164,50 @@ def generate_story(story: list):
     story.append(f"ticket {ticket_id} next status?\t{current_state}\t0")
 
 
+def generate_item(story: list):
+
+    ticket_id = random.randint(99, 9999)
+
+    #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
+    current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
+    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION",])
+
+    story.append("System: You are development Assistant.")
+    story.append("Assistant: Hi, I am development Assistant.")
+
+    asking = ["Hello", "Hi", "hello", "hi", "ok", "yes", "maybe", "Ok", "Yes", "Maybe", "continue", "Continue", "Let's go", "let's go"]
+    story.append(f"User: {random.choice(asking)}")
+
+    story.append("Assistant: Do you have tickets assigned on you?")
+
+    story.append(f"User: ticket {ticket_id}")
+
+    story.append("Assistant: What do you plan to do with it?")
+    max_steps = 5
+
+    for _ in range(max_steps):
+
+        transitions = workflow["State"].get(current_state, [])
+        if not transitions: break
+        transition = random.choice(transitions)
+        next_state = workflow["Transition"][transition]
+
+        intent = random.choice(intent_examples.get(transition, [f"I will perform {transition}."]))
+        
+        story.append(f"User: {intent}")
+
+        story.append(f"ticket {ticket_id} current status?\t{current_state}\t0")
+        story.append(f"ticket {ticket_id} next status?\t{next_state}\t0")
+
+        story.append(f"Assistant: Use transition \"{transition}\" → move ticket to \"{next_state}\".")
+        current_state = next_state
+
+    story.append(f"User: what current status?")
+    story.append(f"Assistant: {current_state}")
+    story.append(f"User: {random.choice(asking)}")
+    story.append("Assistant: Do you have any tickets assigned on you?")
+
+
 def generate_dev(samples: int) -> list:
 
     stories = []
