@@ -120,7 +120,7 @@ def generate_story(story: list):
 
     #story = [f"1 Assistant: Ticket #{ticket_id} was just registered."]
     current_state = random.choice(list(workflow["State"].keys()))   # "JUST REGISTERED"
-    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION",])
+    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION", "IN SW TESTING",])
 
     story.append("System: You are development Assistant.")
     story.append("Assistant: Hi, I am development Assistant.")
@@ -170,7 +170,7 @@ def generate_story_short(story: list):
     ticket_id = random.randint(99, 9999)
 
     current_state = random.choice(list(workflow["State"].keys()))
-    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION",])
+    current_state = random.choice(["JUST REGISTERED", "TO DO", "IMPLEMENTATION", "IN SW TESTING",])
 
     story.append("System: You are development Assistant.")
     story.append("Assistant: Hi, I am development Assistant.")
@@ -193,14 +193,16 @@ def generate_story_short(story: list):
     story.append(f"current status of ticket {ticket_id}?\t{current_state}\t0")
 
     target_state = target_states[current_state]
-    story.append(f"target status of ticket {ticket_id}?\t{target_state}\t0")
+    story.append(f"intent status of ticket {ticket_id}?\t{target_state}\t0")
 
     for transition in workflow["State"][current_state]:
         if workflow["Transition"][transition] == target_state:
             target_transition = transition
 
-    story.append(f"What transition from \"{current_state}\" to \"{target_state}\"?\t{target_transition}\t0")
-    story.append(f"Assistant: Use transition \"{target_transition}\" → move ticket to \"{target_state}\".")
+    story.append(f"intent transition of ticket {ticket_id}?\t\"{target_transition}\"\t0")
+
+    story.append(f"What transition from \"{current_state}\" to \"{target_state}\"?\t\"{target_transition}\"\t0")
+    story.append(f"Assistant: Use transition \"{target_transition}\" → move ticket to \"{target_state}\" when you finished.")
 
 
 def generate_item(story: list):
@@ -231,7 +233,7 @@ def generate_item(story: list):
         transition = random.choice(transitions)
         next_state = workflow["Transition"][transition]
 
-        intent = random.choice(intent_examples.get(transition, [f"I will perform {transition}."]))
+        intent = random.choice(intent_examples.get(transition, [f"I will perform \"{transition}\"."]))
         
         story.append(f"User: {intent}")
 
@@ -252,14 +254,14 @@ def generate_dev(samples: int) -> list:
     stories = []
     turn_stories = []
 
-    question_per_story = 10
+    question_per_story = 4
     story_count = int(samples / question_per_story)
 
     for _ in range(story_count):
 
         items = []
 
-        generate_story(items)
+        generate_story_short(items)
 
         stories.append(items_to_story(items))
 
