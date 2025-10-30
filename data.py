@@ -14,7 +14,7 @@ Question:
 
 Answer:
 """
-
+############################################################################
 paths = {
     "en": {
         "qa21": {
@@ -149,16 +149,14 @@ class BabiqaDataset():
 
         input_text = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
         enc_input = self.tokenizer(
-            input_text, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt"
-            )["input_ids"]
+            input_text, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt")["input_ids"]
 
         # train in Supervised fine-tuning mode:
         if self.no_answer:
             input_ids = enc_input
         else:
             enc_output = self.tokenizer(
-                answer, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt"
-                )["input_ids"]
+                answer, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt")["input_ids"]
 
             # combine into one sequence
             input_ids = torch.cat([
