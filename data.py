@@ -113,7 +113,7 @@ def get_next_qa(dataset):
 
 class BabiqaDataset():
 
-    def __init__(self,tokenizer, task_no="qa1", split="train", no_answer=False) -> None:
+    def __init__(self, tokenizer, task_no="qa1", split="train", no_answer=False) -> None:
         self.tokenizer:PreTrainedTokenizer = tokenizer
 
         category = "en" # or "en-10k"
@@ -121,7 +121,7 @@ class BabiqaDataset():
             dataset = load_babi_txt(paths[category][task_no][split])
         else:
             dataset = list(get_next_qa(
-                load_dataset('babi_qa', type=category, task_no=task_no)[split]
+                load_dataset('babi_qa', type=category, task_no=task_no, trust_remote_code=True)[split]
             ))
         self.data = dataset
         self.no_answer = no_answer
