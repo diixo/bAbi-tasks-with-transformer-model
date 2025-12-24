@@ -1,6 +1,6 @@
-pandas
-datasets
-transformers
-scikit-learn
-wandb
-evaluate
+pandas==2.3.1
+datasets==3.6.0
+transformers==4.56.1
+scikit-learn==1.6.1
+torch==2.8.0
+evaluate==0.4.6
