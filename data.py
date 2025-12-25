@@ -204,5 +204,5 @@ def collate_data(batch, padding_value, label_padding_value=-100):
 
 if __name__ == "__main__":
 
-    babi = BabiqaDataset(None, split="train", task_no="qa22")
+    babi = BabiqaDataset(None, split="train", task_no="qa21")
     print(len(babi))
