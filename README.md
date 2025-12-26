@@ -4,8 +4,9 @@
 > [Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks](https://arxiv.org/abs/1502.05698)
 
 
-* Run **training**: [trainer.py](trainer.py)
-* Run **evaluation**: [eval.py](eval.py)
+* **Training**: [trainer.py](trainer.py)
+
+* **Evaluation**: [eval.py](eval.py)
 
 
 |task_no|epochs|learning_rate|batch_size| corrects/all |
@@ -22,6 +23,7 @@
 
 
 ## Tasks
+
 |task_no|task_name|
 |------|-----------------------|
 | qa1  | single-supporting-fact|
