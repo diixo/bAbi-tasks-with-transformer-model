@@ -8,17 +8,6 @@
 * Run **evaluation**: [eval.py](eval.py)
 
 
-## Requirements:
-
-```bash
-pip install numpy==1.26.4
-pip install torch==2.5.1
-pip install pandas==2.3.1
-pip install datasets==3.6.0
-pip install transformers==4.56.1
-pip install evaluate==0.4.6
-```
-
 |task_no|epochs|learning_rate|batch_size| corrects/all |
 |-------|------|-------------|----------|--------------|
 |  qa1  |   2  |    1e-04    |    8     |   997/1000   |
@@ -55,6 +44,18 @@ pip install evaluate==0.4.6
 | qa18 | size-reasoning|
 | qa19 | path-finding|
 | qa20 | agents-motivations|
+
+
+### Requirements:
+
+```bash
+pip install numpy==1.26.4
+pip install torch==2.5.1
+pip install pandas==2.3.1
+pip install datasets==3.6.0
+pip install transformers==4.56.1
+pip install evaluate==0.4.6
+```
 
 
 ## Acknowledgements:
