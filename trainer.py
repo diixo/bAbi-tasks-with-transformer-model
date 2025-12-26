@@ -15,9 +15,9 @@ def create_test_args() -> list:
     return [
         "trainer.py",
         "gpt2",
-        "-task_number", "27",
+        "-task_number", "1",
         "-lr", "1e-4",
-        "-epoch", "1",
+        "-epoch", "2",
         "-batch_size", "8",
         "-grouping", "True",
     ]
@@ -25,7 +25,7 @@ def create_test_args() -> list:
 
 parser = argparse.ArgumentParser()
 parser.add_argument("model_name")
-parser.add_argument("-task_number", default=2, type=int)
+parser.add_argument("-task_number", default=1, type=int)
 parser.add_argument('-lr', default=3e-4, type=float)
 parser.add_argument('-batch_size', default=6, type=int)
 parser.add_argument('-epoch', default=3, type=int)
@@ -49,10 +49,8 @@ class Trainer(DefaultTrainer):
 
 
 def make_dataset(task_number, grouping=False):
-    if task_number <= 0:
-        if task_number < 0:
-            task_number = abs(task_number)
-        else: task_number = 20
+
+    if task_number <= 20:
         train_ds = ConcatDataset(
             [
                 BabiqaDataset(tokenizer, split="train", task_no=f"qa{task_id+1}")
