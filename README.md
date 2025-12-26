@@ -4,7 +4,7 @@
 * Run **evaluation**: [eval.py](eval.py)
 
 
-Fine tune and evaluate transformer model on facebook's bAbi tasks.
+Supervised fine tune (SFT) and evaluate transformer model on facebook's bAbi tasks:
 > [Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks](https://arxiv.org/abs/1502.05698)
 
 
