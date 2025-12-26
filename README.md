@@ -1,4 +1,4 @@
-# bAbi-tasks-with-transformer-model (supervised fine-tuning GPT2)
+# bAbi-tasks-with-transformer-model (SFT-mode for GPT2)
 
 **Supervised fine tune** (**SFT**) and evaluate transformer model on facebook's bAbi tasks:
 > [Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks](https://arxiv.org/abs/1502.05698)
