@@ -63,3 +63,6 @@ pip install evaluate==0.4.6
 ## Acknowledgements:
 
 Based on original: https://github.com/p208p2002/bAbi-tasks-with-transformer-model
+
+* https://github.com/MostafaDehghani/bAbI-T2T
+
