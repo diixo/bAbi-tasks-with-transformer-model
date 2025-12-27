@@ -66,3 +66,4 @@ Based on original: https://github.com/p208p2002/bAbi-tasks-with-transformer-mode
 
 * https://github.com/MostafaDehghani/bAbI-T2T
 
+* https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/data_generators/babi_qa.py
