@@ -3,6 +3,8 @@ from transformers import PreTrainedTokenizer
 from torch.nn.utils.rnn import pad_sequence
 from collections import defaultdict
 import torch
+import json
+from typing import List, Tuple
 
 
 INPUT_TEMPLATE = """
@@ -200,6 +202,41 @@ def collate_data(batch, padding_value, label_padding_value=-100):
         new_batch["attention_mask"] = (new_batch["input_ids"] != padding_value).long()
     
     return new_batch
+
+
+############################################################################
+def load_items_jsonl(file_path: str) -> List[Tuple[str, str, str]]:
+    """
+    Load bAbI-style data from a JSONL file.
+    Each line must be a JSON object with fields: "context", "question", "answer".
+
+    Returns:
+        List of (context, question, answer) tuples.
+    """
+    examples = []
+    with open(file_path, 'r', encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+
+            context = obj.get("context", "")
+            question = obj.get("question", "")
+            answer = obj.get("answer", "")
+
+            examples.append(tuple([context, question, answer]))
+
+    return examples
+
+
+class DatasetJsonl(BabiqaDataset):
+    def __init__(self, tokenizer: PreTrainedTokenizer, jsonl_path: str, no_answer: bool = False) -> None:
+        # Don't call super().__init__, cause don't try to load the old format.
+        self.tokenizer: PreTrainedTokenizer = tokenizer
+        self.data = load_items_jsonl(jsonl_path)
+        self.no_answer = no_answer
+
 
 
 if __name__ == "__main__":
