@@ -160,7 +160,7 @@ class BabiqaDataset():
             enc_output = self.tokenizer(
                 answer, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt")["input_ids"]
 
-            # combine into one sequence
+            # combine into one sequence, add eos_token_id at the end to prevent GPT2 from cutting the answer
             input_ids = torch.cat([
                 enc_input,                                                      # (1, N)
                 enc_output,                                                     # (1, M)
@@ -180,7 +180,7 @@ class BabiqaDataset():
             "input_ids": input_ids,
             "labels": labels,
         }
-    
+
     def __len__(self):
         return len(self.data)
 
