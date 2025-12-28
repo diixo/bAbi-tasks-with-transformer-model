@@ -59,7 +59,7 @@ if __name__ == "__main__":
         model_prediction.append(pred)
         references.append(1)
 
-        print(data_idx, raw_data["answer"], pred_words)
+        print(data_idx + 1, raw_data["answer"], pred_words)
         df = pd.concat(
             [
                 df,
