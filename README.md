@@ -11,7 +11,8 @@
 
 |task_no|epochs|learning_rate|batch_size| corrects/all |
 |-------|------|-------------|----------|--------------|
-|  qa1  |   2  |    1e-04    |    8     |   997/1000   |
+|  qa1  |   2  |    1e-04    |    8     |   991/1000   |
+|  qa1  |   3  |    1e-04    |    8     |  1000/1000   |
 
 
 |  task_no  |epochs|learning_rate|batch_size|     qa1      |     qa2     |
