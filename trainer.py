@@ -1,13 +1,25 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer as DefaultTrainer
 from data import collate_data, BabiqaDataset
 from torch.utils.data import ConcatDataset
-import torch
+import os, torch, random, numpy as np
 from transformers.optimization import get_scheduler
 import sys
 import argparse
+from transformers import set_seed
 
 
-torch.manual_seed(42)
+seed = 42
+set_seed(seed)
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+
+# disabled TF32
+torch.backends.cuda.matmul.allow_tf32 = False
+torch.backends.cudnn.allow_tf32 = False
+
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_dir = "gpt2-babi"
 
@@ -106,6 +118,9 @@ if __name__ == "__main__":
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.gradient_accumulation,
         lr_scheduler_type="constant",
+
+        bf16=True,
+        fp16=False,
     )
 
     trainer = Trainer(
