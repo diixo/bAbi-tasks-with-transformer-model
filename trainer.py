@@ -1,5 +1,5 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer as DefaultTrainer
-from data import collate_data, BabiqaDataset
+from data import collate_batch, BabiqaDataset
 from torch.utils.data import ConcatDataset
 import os, torch, random, numpy as np
 from transformers.optimization import get_scheduler
@@ -104,8 +104,6 @@ if __name__ == "__main__":
     model = AutoModelForCausalLM.from_pretrained(args.model_name)
     model.to(device)
 
-    train_dataset, test_dataset = make_dataset(args.task_number, args.grouping)
-
     training_args = TrainingArguments(
         output_dir=model_dir,
         save_strategy="no",
@@ -123,12 +121,15 @@ if __name__ == "__main__":
         fp16=False,
     )
 
+
+    train_dataset, test_dataset = make_dataset(args.task_number, args.grouping)
+
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=test_dataset,
-        data_collator=lambda x: collate_data(
+        data_collator=lambda x: collate_batch(
             x,
             padding_value=tokenizer.eos_token_id,
             label_padding_value=tokenizer.eos_token_id

@@ -7,6 +7,9 @@ import json
 from typing import List, Tuple
 
 
+MAX_LEN = 1024
+
+############################################################################
 INPUT_TEMPLATE = """
 Context:
 {context}
@@ -151,14 +154,14 @@ class BabiqaDataset():
 
         input_text = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
         enc_input = self.tokenizer(
-            input_text, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt")["input_ids"]
+            input_text, truncation=True, add_special_tokens=False, max_length=(MAX_LEN-1), return_tensors="pt")["input_ids"]
 
         # train in Supervised fine-tuning mode:
         if self.no_answer:
             input_ids = enc_input
         else:
             enc_output = self.tokenizer(
-                answer, truncation=True, add_special_tokens=False, max_length=1000, return_tensors="pt")["input_ids"]
+                answer, truncation=True, add_special_tokens=False, max_length=(MAX_LEN-1), return_tensors="pt")["input_ids"]
 
             # combine into one sequence, add eos_token_id at the end to prevent GPT2 from cutting the answer
             input_ids = torch.cat([
@@ -185,7 +188,7 @@ class BabiqaDataset():
         return len(self.data)
 
 
-def collate_data(batch, padding_value, label_padding_value=-100):
+def collate_batch(batch, padding_value, label_padding_value=-100):
     new_batch = defaultdict(lambda:[])
     for x in batch:
         for x_key in x.keys():
