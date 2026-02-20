@@ -46,7 +46,7 @@ parser.add_argument('-grouping', default=False, type=bool)
 
 
 class Trainer(DefaultTrainer):
-    def create_scheduler(self,  num_training_steps: int, optimizer: torch.optim.Optimizer = None):
+    def create_scheduler(self, num_training_steps: int, optimizer: torch.optim.Optimizer = None):
         """
         disable scheduler
         """

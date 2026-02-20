@@ -1,0 +1,25 @@
+1 The company is going to close down its factory next year.
+2 What is the action_text?	close down	0
+3 What is the action?	close down	0
+4 What is the tense?	present	0
+5 What is the tense_aspect?	simple	0
+6 What is the time_relation?	future	0
+7 What is the future_marker?	is going to	0
+8 What is the subject?	The company	0
+9 What is the object?	its factory	0
+10 What is the prep?	null	0
+11 What is the prep_object?	null	0
+12 What is the time_expr?	next year	0
+
+1 The company will close down its factory next year.
+2 What is the action_text?	close down	0
+3 What is the action?	close down	0
+4 What is the tense?	future	0
+5 What is the tense_aspect?	simple	0
+6 What is the time_relation?	future	0
+7 What is the future_marker?	will	0
+8 What is the subject?	The company	0
+9 What is the object?	its factory	0
+10 What is the prep?	null	0
+11 What is the prep_object?	null	0
+12 What is the time_expr?	next year	0
