@@ -132,7 +132,7 @@ if __name__ == "__main__":
         data_collator=lambda x: collate_batch(
             x,
             padding_value=tokenizer.eos_token_id,
-            label_padding_value=tokenizer.eos_token_id
+            label_padding_value=-100
         ),
     )
 
