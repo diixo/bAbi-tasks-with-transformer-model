@@ -126,10 +126,14 @@ class BabiqaDataset():
         if task_no in paths[category]:
             dataset = load_babi_txt(paths[category][task_no][split])
         else:
-            dataset = load_babi_txt("datasets/" + babi_qa_paths[category][task_no][split])
+            dataset = load_babi_txt(f"datasets/{babi_qa_paths[category][task_no][split]}")
 
         self.data = dataset
         self.no_answer = no_answer
+
+
+    def __len__(self):
+        return len(self.data)
 
 
     def get_raw_item(self, index):
@@ -154,45 +158,44 @@ class BabiqaDataset():
 
         input_text = INPUT_TEMPLATE.format_map(cqa).strip() + "\n"
         enc_input = self.tokenizer(
-            input_text, truncation=True, add_special_tokens=False, max_length=(MAX_LEN-1), return_tensors="pt")["input_ids"]
+            input_text, truncation=True, add_special_tokens=False, max_length=(MAX_LEN-1), return_tensors="pt"
+            )["input_ids"].squeeze(0)   # [[]] -> []
 
         # train in Supervised fine-tuning mode:
         if self.no_answer:
             input_ids = enc_input
         else:
             enc_output = self.tokenizer(
-                answer, truncation=True, add_special_tokens=False, max_length=(MAX_LEN-1), return_tensors="pt")["input_ids"]
+                answer, truncation=True, add_special_tokens=False, max_length=(MAX_LEN-1), return_tensors="pt"
+                )["input_ids"].squeeze(0) # [[]] -> []
 
             # combine into one sequence, add eos_token_id at the end to prevent GPT2 from cutting the answer
             input_ids = torch.cat([
-                enc_input,                                                      # (1, N)
-                enc_output,                                                     # (1, M)
-                torch.tensor([[self.tokenizer.eos_token_id]], dtype=torch.long) # (1, 1)
-            ], dim=1)                                                           # (1, N+M+1)=shape([0],[1])
+                enc_input,                                                      # (N)
+                enc_output,                                                     # (M)
+                torch.tensor([self.tokenizer.eos_token_id], dtype=torch.long)   # (1)
+            ], dim=0)                                                           # (N+M+1)=shape([0])
 
         # create new array
         labels = input_ids.clone()
 
-        # masked only input_text:   [0, :N=enc_input(1, N)]
-        labels[0, :enc_input.size(1)] = -100
+        # masked only input_text:   [:N=enc_input(N)]
+        labels[ : enc_input.size(0)] = -100
 
-        batch_max_length = max(len(item)+1 for item in input_ids)
-        assert batch_max_length <= 1024, f"batch_max_length={batch_max_length}<=1024: out of range"
+        max_length = len(input_ids)
+        assert max_length <= 1024, f"max_length={max_length}>1024: out of range"
 
         return {
             "input_ids": input_ids,
             "labels": labels,
         }
 
-    def __len__(self):
-        return len(self.data)
-
 
 def collate_batch(batch, padding_value, label_padding_value=-100):
     new_batch = defaultdict(lambda:[])
     for x in batch:
         for x_key in x.keys():
-            new_batch[x_key].append(x[x_key][0])
+            new_batch[x_key].append(x[x_key])
     
     new_batch = dict(new_batch)
     for batch_key in new_batch.keys():
