@@ -5,7 +5,7 @@ from collections import defaultdict
 import torch
 import json
 from typing import List, Tuple
-
+from babi_qa_paths import babi_qa_paths
 
 MAX_LEN = 1024
 
@@ -20,6 +20,7 @@ Question:
 Answer:
 """
 ############################################################################
+
 paths = {
     "en": {
         "qa21": {
@@ -125,9 +126,8 @@ class BabiqaDataset():
         if task_no in paths[category]:
             dataset = load_babi_txt(paths[category][task_no][split])
         else:
-            dataset = list(get_next_qa(
-                load_dataset('babi_qa', type=category, task_no=task_no, trust_remote_code=True)[split]
-            ))
+            dataset = load_babi_txt("datasets/" + babi_qa_paths[category][task_no][split])
+
         self.data = dataset
         self.no_answer = no_answer
 
