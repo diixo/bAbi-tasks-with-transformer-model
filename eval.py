@@ -36,9 +36,10 @@ if __name__ == "__main__":
 
     for data_idx, data in enumerate(test_dataset):
         raw_data = test_dataset.get_raw_item(data_idx)
-        input_ids = data["input_ids"].unsqueeze(0).to(device) # unsqueeze(0) make: []->>[[]]
+        input_ids = data["input_ids"]
+        input_ids = input_ids[None, : ] # = input_ids.unsqueeze(0)
         gen_ids = model.generate(
-                input_ids=input_ids,
+                input_ids=input_ids.to(device),
                 max_new_tokens=30,
                 do_sample=False,
                 eos_token_id=tokenizer.eos_token_id,
